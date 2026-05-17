@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BoticaFrontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.10.
@@ -57,3 +58,6 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+=======
+# botica_frontend
+>>>>>>> f838b368ac0d2ab5cae6fd876a3455cb497dff79
