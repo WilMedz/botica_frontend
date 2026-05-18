@@ -1,0 +1,74 @@
+<h2>Gestión de Proveedores</h2>
+
+<div class="form-container">
+    <h3>{{ isEditing ? 'Editar' : 'Nuevo' }} Proveedor</h3>
+    <form [formGroup]="proveedorForm" (ngSubmit)="guardar()">
+        <div class="form-group">
+            <label for="razonSocial">Razón Social:</label>
+            <input type="text" id="razonSocial" formControlName="razonSocial">
+            <div class="error" *ngIf="proveedorForm.get('razonSocial')?.invalid && proveedorForm.get('razonSocial')?.touched">
+                * Obligatorio (mínimo 3 caracteres)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ruc">RUC:</label>
+            <input type="text" id="ruc" formControlName="ruc">
+            <div class="error" *ngIf="proveedorForm.get('ruc')?.invalid && proveedorForm.get('ruc')?.touched">
+                * Debe tener 11 dígitos
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" formControlName="direccion">
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" formControlName="telefono">
+            <div class="error" *ngIf="proveedorForm.get('telefono')?.invalid && proveedorForm.get('telefono')?.touched">
+                * Debe tener 9 dígitos
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" formControlName="email">
+            <div class="error" *ngIf="proveedorForm.get('email')?.invalid && proveedorForm.get('email')?.touched">
+                * Email inválido
+            </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="estado" formControlName="estado">
+            <label for="estado">Activo</label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" [disabled]="proveedorForm.invalid">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+            <button type="button" (click)="resetForm()" *ngIf="isEditing">Cancelar</button>
+        </div>
+    </form>
+</div>
+
+<h3>Lista de Proveedores</h3>
+<table class="tabla-proveedores">
+    <thead>
+        <tr><th>ID</th><th>Razón Social</th><th>RUC</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let p of proveedores">
+            <td>{{ p.idProveedor }}</td>
+            <td>{{ p.razonSocial }}</td>
+            <td>{{ p.ruc }}</td>
+            <td>{{ p.telefono }}</td>
+            <td>{{ p.email }}</td>
+            <td>{{ p.estado ? 'Activo' : 'Inactivo' }}</td>
+            <td class="acciones">
+                <button (click)="editar(p)">Editar</button>
+                <button (click)="eliminar(p.idProveedor!)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

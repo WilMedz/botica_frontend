@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CategoriaComponent } from './pages/categoria/categoria.component';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [CategoriaComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

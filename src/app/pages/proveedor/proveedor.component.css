@@ -1,0 +1,42 @@
+.form-container {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 500px;
+}
+.form-group {
+    margin-top: 10px;
+}
+.form-group label {
+    display: inline-block;
+    width: 100px;
+}
+.error {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 105px;
+}
+.checkbox-group label {
+    width: auto;
+    margin-left: 5px;
+}
+.form-actions {
+    margin-top: 15px;
+    margin-left: 100px;
+}
+.tabla-proveedores {
+    border-collapse: collapse;
+    width: 100%;
+}
+.tabla-proveedores th, .tabla-proveedores td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.tabla-proveedores th {
+    background-color: #f2f2f2;
+}
+.acciones button {
+    margin-right: 5px;
+}
