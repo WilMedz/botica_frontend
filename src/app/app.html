@@ -1,33 +1,54 @@
 <div class="layout">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <span>💊</span>
-            <h1>MarlenyFarma</h1>
-        </div>
-        <nav>
-            <p class="nav-section">GENERAL</p>
-            <ul>
-                <li>
-                    <a routerLink="/categorias" routerLinkActive="active">
-                        🏷️ Categorias
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="/proveedores" routerLinkActive="active">
-                        🏭 Proveedores
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
 
-    <div class="main">
-        <header class="header">
-            <h2>Sistema de Gestión - Botica MarlenyFarma</h2>
-        </header>
-        <div class="contenido">
-            <router-outlet></router-outlet>
-        </div>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span>💊</span>
+      <h1>MarlenyFarma</h1>
     </div>
-    
+    <nav>
+      <p class="nav-section">GENERAL</p>
+      <ul>
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="active">
+            📊 Dashboard
+          </a>
+        </li>
+        <li>
+          <a routerLink="/categorias" routerLinkActive="active">
+            🏷️ Categorías
+          </a>
+        </li>
+        <li>
+          <a routerLink="/proveedores" routerLinkActive="active">
+            🏭 Proveedores
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="header">
+      <span class="breadcrumb">📄 Páginas &rsaquo; {{ getPagina() }}</span>
+      
+      <div class="header-search">
+        <span class="search-icono">🔍</span>
+        <input type="text" placeholder="Buscar..." disabled>
+      </div>
+
+      <div class="header-acciones">
+        <span class="header-icono">🔔</span>
+        <span class="header-icono">⚙️</span>
+        <div class="header-usuario">
+          <span class="usuario-avatar">A</span>
+          <span class="usuario-nombre">Admin</span>
+          <span>▾</span>
+        </div>
+      </div>
+    </header>
+    <div class="contenido">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
 </div>

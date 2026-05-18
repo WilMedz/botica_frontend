@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProveedorService } from '../../services/proveedor.service';
@@ -12,7 +12,7 @@ import { Proveedor } from '../../model/proveedor';
     styleUrl: './proveedor.component.css'
 })
 export class ProveedorComponent implements OnInit {
-    proveedores: Proveedor[] = [];
+    proveedores = signal<Proveedor[]>([]);
     proveedorForm: FormGroup;
     isEditing = false;
     editingId: number | null = null;
@@ -36,7 +36,7 @@ export class ProveedorComponent implements OnInit {
     }
 
     cargarProveedores(): void {
-        this.service.findAll().subscribe(data => this.proveedores = data);
+        this.service.findAll().subscribe(data => this.proveedores.set(data));
     }
 
     guardar(): void {

@@ -97,3 +97,74 @@ nav ul li a.active {
   padding: 30px;
   overflow-y: auto;
 }
+
+.breadcrumb {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-acciones {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-icono {
+  font-size: 18px;
+  color: #d1d5db;
+  cursor: not-allowed;
+  filter: grayscale(100%) opacity(40%);
+}
+
+.header-usuario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.usuario-avatar {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.header-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 8px 15px;
+}
+
+.search-icono {
+  font-size: 14px;
+  filter: grayscale(100%) opacity(40%);
+}
+
+.header-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: #9ca3af;
+  width: 200px;
+  cursor: not-allowed;
+}
