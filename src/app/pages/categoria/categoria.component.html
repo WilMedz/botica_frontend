@@ -1,19 +1,57 @@
-<h2>Categorías</h2>
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Descripción</th>
-      <th>Estado</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let categoria of categorias()">
-      <td>{{ categoria.idCategoria }}</td>
-      <td>{{ categoria.nombre }}</td>
-      <td>{{ categoria.descripcion }}</td>
-      <td>{{ categoria.estado ? 'Activo' : 'Inactivo' }}</td>
-    </tr>
-  </tbody>
+<h2>Gestión de Categorías</h2>
+
+<div class="form-container">
+    <h3>{{ isEditing ? 'Editar' : 'Nueva' }} Categoría</h3>
+    <form [formGroup]="categoriaForm" (ngSubmit)="guardar()">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" formControlName="nombre">
+            <div class="error" *ngIf="categoriaForm.get('nombre')?.invalid && categoriaForm.get('nombre')?.touched">
+                * Obligatorio (mínimo 3 caracteres)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <input type="text" id="descripcion" formControlName="descripcion">
+            <div class="error" *ngIf="categoriaForm.get('descripcion')?.invalid && categoriaForm.get('descripcion')?.touched">
+                * Obligatorio
+            </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="estado" formControlName="estado">
+            <label for="estado">Activo</label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" [disabled]="categoriaForm.invalid">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+            <button type="button" (click)="resetForm()" *ngIf="isEditing">Cancelar</button>
+        </div>
+    </form>
+</div>
+
+<h3>Lista de Categorías</h3>
+<table class="tabla-categorias">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let c of categorias()">
+            <td>{{ c.idCategoria }}</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.descripcion }}</td>
+            <td>{{ c.estado ? 'Activo' : 'Inactivo' }}</td>
+            <td class="acciones">
+                <button (click)="editar(c)">Editar</button>
+                <button (click)="eliminar(c.idCategoria)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
 </table>

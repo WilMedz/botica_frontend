@@ -1,1 +1,33 @@
-<router-outlet></router-outlet>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span>💊</span>
+            <h1>MarlenyFarma</h1>
+        </div>
+        <nav>
+            <p class="nav-section">GENERAL</p>
+            <ul>
+                <li>
+                    <a routerLink="/categorias" routerLinkActive="active">
+                        🏷️ Categorias
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/proveedores" routerLinkActive="active">
+                        🏭 Proveedores
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main">
+        <header class="header">
+            <h2>Sistema de Gestión - Botica MarlenyFarma</h2>
+        </header>
+        <div class="contenido">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+    
+</div>
