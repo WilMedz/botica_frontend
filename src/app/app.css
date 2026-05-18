@@ -152,6 +152,8 @@ nav ul li a.active {
   background-color: #f3f4f6;
   border-radius: 8px;
   padding: 8px 15px;
+  margin-left: auto;
+  margin-right: 15px;
 }
 
 .search-icono {
@@ -165,6 +167,6 @@ nav ul li a.active {
   outline: none;
   font-size: 14px;
   color: #9ca3af;
-  width: 200px;
+  width: 280px;
   cursor: not-allowed;
 }

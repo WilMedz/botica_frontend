@@ -1,10 +1,19 @@
-<h2>Dashboard</h2>
-<p class="subtitulo">Bienvenido al sistema de gestión — Botica MarlenyFarma</p>
+<div class="dashboard-header">
+  <div>
+    <h2>Vista General</h2>
+  </div>
+  <div class="dashboard-acciones">
+    <span class="fecha">📅 {{ fechaHoy }}</span>
+    <button class="btn-export" disabled>⬇️ Exportar</button>
+  </div>
+</div>
 
 <div class="tarjetas">
 
   <div class="tarjeta">
-    <div class="tarjeta-icono">🏷️</div>
+    <div class="tarjeta-icono icono-verde">
+      <span class="material-icons">attach_money</span>
+    </div>
     <div class="tarjeta-info">
       <span class="tarjeta-numero">{{ totalCategorias() }}</span>
       <span class="tarjeta-label">Categorías</span>
@@ -12,7 +21,9 @@
   </div>
 
   <div class="tarjeta">
-    <div class="tarjeta-icono">🏭</div>
+    <div class="tarjeta-icono icono-azul">
+      <span class="material-icons">shopping_bag</span>
+    </div>
     <div class="tarjeta-info">
       <span class="tarjeta-numero">{{ totalProveedores() }}</span>
       <span class="tarjeta-label">Proveedores</span>
@@ -20,7 +31,9 @@
   </div>
 
   <div class="tarjeta">
-    <div class="tarjeta-icono">💊</div>
+    <div class="tarjeta-icono icono-naranja">
+      <span class="material-icons">inventory_2</span>
+    </div>
     <div class="tarjeta-info">
       <span class="tarjeta-numero">0</span>
       <span class="tarjeta-label">Productos</span>
@@ -28,11 +41,107 @@
   </div>
 
   <div class="tarjeta">
-    <div class="tarjeta-icono">👥</div>
+    <div class="tarjeta-icono icono-morado">
+      <span class="material-icons">people</span>
+    </div>
     <div class="tarjeta-info">
       <span class="tarjeta-numero">0</span>
       <span class="tarjeta-label">Clientes</span>
     </div>
   </div>
 
+  <div class="tarjeta">
+    <div class="tarjeta-icono icono-rojo">
+      <span class="material-icons">receipt_long</span>
+    </div>
+    <div class="tarjeta-info">
+      <span class="tarjeta-numero">0</span>
+      <span class="tarjeta-label">Ventas</span>
+    </div>
+  </div>
+</div>
+
+<div class="graficos-row">
+
+  <div class="grafico-container">
+    <div class="grafico-header">
+      <div>
+        <h3>Total Ventas</h3>
+        <p class="grafico-subtitulo">Cantidad de ventas por día</p>
+      </div>
+      <div class="grafico-filtros">
+        <button class="btn-filtro activo" disabled>7 días</button>
+        <button class="btn-filtro" disabled>30 días</button>
+      </div>
+    </div>
+    <canvas #ventasChart></canvas>
+  </div>
+
+  <div class="grafico-container">
+    <div class="grafico-header">
+      <div>
+        <h3>Total Ingresos</h3>
+        <p class="grafico-subtitulo">Monto ingresado por día (S/.)</p>
+      </div>
+      <div class="grafico-filtros">
+        <button class="btn-filtro activo" disabled>7 días</button>
+        <button class="btn-filtro" disabled>30 días</button>
+      </div>
+    </div>
+    <canvas #ingresosChart></canvas>
+  </div>
+
+</div>
+
+<div class="last-sales-container">
+  <div class="last-sales-header">
+    <div>
+      <h3>Últimas Ventas</h3>
+      <p class="grafico-subtitulo">Ventas más recientes del sistema</p>
+    </div>
+    <button class="btn-ver-todo" disabled>Ver todo</button>
+  </div>
+
+  <table class="tabla-last-sales">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Juan Pérez</td>
+        <td>18 may. 2026</td>
+        <td>S/. 45.00</td>
+        <td><span class="estado-pagado">PAGADO</span></td>
+      </tr>
+      <tr>
+        <td>María López</td>
+        <td>18 may. 2026</td>
+        <td>S/. 120.50</td>
+        <td><span class="estado-pagado">PAGADO</span></td>
+      </tr>
+      <tr>
+        <td>Carlos Ruiz</td>
+        <td>17 may. 2026</td>
+        <td>S/. 30.00</td>
+        <td><span class="estado-anulado">ANULADO</span></td>
+      </tr>
+      <tr>
+        <td>Ana Torres</td>
+        <td>17 may. 2026</td>
+        <td>S/. 75.00</td>
+        <td><span class="estado-pagado">PAGADO</span></td>
+      </tr>
+      <tr>
+        <td>Luis Díaz</td>
+        <td>16 may. 2026</td>
+        <td>S/. 200.00</td>
+        <td><span class="estado-pagado">PAGADO</span></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
