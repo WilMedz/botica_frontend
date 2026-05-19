@@ -9,9 +9,15 @@ export class Producto {
     precioCompra: number = 0;
     precioVenta: number = 0;
     stock: number = 0;
-    stockMinimo: number = 0;
+    stockMinimo: number = 20;
+    estado: boolean = true;
+    fechaVencimiento: string = '';
+
+    // Relaciones
     categoria: Categoria = new Categoria();
     proveedor: Proveedor = new Proveedor();
-    estado: boolean = true;
-    fechaVenvimiento: Date = new Date();
+
+    // backend en GET
+    nombreCategoria?: string;
+    razonSocialProveedor?: string;
 }
