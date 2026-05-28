@@ -7,7 +7,7 @@
     </div>
     <nav>
       <p class="nav-section">GENERAL</p>
-<ul>
+      <ul>
         <li>
           <a routerLink="/dashboard" routerLinkActive="active">
             📊 Dashboard
@@ -28,6 +28,31 @@
             💊 Productos
           </a>
         </li>
+        <li>
+          <a routerLink="/clientes" routerLinkActive="active">
+            👥 Clientes
+          </a>
+        </li>
+        <li>
+          <a routerLink="/ventas" routerLinkActive="active">
+            🛒 Ventas
+          </a>
+        </li>
+        <li>
+          <a routerLink="/movimientos" routerLinkActive="active">
+            📦 Inventario
+          </a>
+        </li>
+        <li>
+          <a routerLink="/usuarios" routerLinkActive="active">
+            👤 Usuarios
+          </a>
+        </li>
+        <li>
+          <a routerLink="/roles" routerLinkActive="active">
+            🔑 Roles
+          </a>
+        </li>
       </ul>
     </nav>
   </aside>
@@ -35,7 +60,6 @@
   <div class="main">
     <header class="header">
       <span class="breadcrumb">📄 Páginas &rsaquo; {{ getPagina() }}</span>
-      
       <div class="header-search">
         <span class="search-icono">🔍</span>
         <input type="text" placeholder="Buscar..." disabled>

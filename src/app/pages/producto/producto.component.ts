@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductoService }  from '../../services/producto.service';
@@ -16,9 +16,9 @@ import { Proveedor } from '../../model/proveedor';
     styleUrl: './producto.component.css'
 })
 export class ProductoComponent implements OnInit {
-    productos   = signal<Producto[]>([]);
-    categorias  = signal<Categoria[]>([]);
-    proveedores = signal<Proveedor[]>([]);
+    productos:   Producto[]  = [];   
+    categorias:  Categoria[] = [];   
+    proveedores: Proveedor[] = [];   
 
     productoForm: FormGroup;
     isEditing  = false;
@@ -39,13 +39,9 @@ export class ProductoComponent implements OnInit {
             stock:            [0,  [Validators.required, Validators.min(0)]],
             stockMinimo:      [20, [Validators.required, Validators.min(0)]],
             fechaVencimiento: [''],
-            categoria: this.fb.group({
-                idCategoria: [0, [Validators.required, Validators.min(1)]]
-            }),
-            proveedor: this.fb.group({
-                idProveedor: [0, [Validators.required, Validators.min(1)]]
-            }),
-            estado: [true]
+            idCategoria:      [0,  [Validators.required, Validators.min(1)]],
+            idProveedor:      [0,  [Validators.required, Validators.min(1)]],
+            estado:           [true]
         });
     }
 
@@ -56,15 +52,15 @@ export class ProductoComponent implements OnInit {
     }
 
     cargarProductos(): void {
-        this.service.findAll().subscribe(data => this.productos.set(data));
+        this.service.findAll().subscribe(data => this.productos = data);   
     }
 
     cargarCategorias(): void {
-        this.categoriaService.findAll().subscribe(data => this.categorias.set(data));
+        this.categoriaService.findAll().subscribe(data => this.categorias = data);  
     }
 
     cargarProveedores(): void {
-        this.proveedorService.findAll().subscribe(data => this.proveedores.set(data));
+        this.proveedorService.findAll().subscribe(data => this.proveedores = data); 
     }
 
     guardar(): void {
@@ -88,7 +84,7 @@ export class ProductoComponent implements OnInit {
 
     editar(prod: Producto): void {
         this.isEditing = true;
-        this.editingId = prod.idProducto!;
+        this.editingId = prod.idProducto;
         this.productoForm.patchValue({
             nombre:           prod.nombre,
             descripcion:      prod.descripcion,
@@ -98,8 +94,8 @@ export class ProductoComponent implements OnInit {
             stock:            prod.stock,
             stockMinimo:      prod.stockMinimo,
             fechaVencimiento: prod.fechaVencimiento,
-            categoria: { idCategoria: prod.categoria.idCategoria },
-            proveedor: { idProveedor: prod.proveedor.idProveedor },
+            idCategoria:      prod.idCategoria,
+            idProveedor:      prod.idProveedor,
             estado:           prod.estado
         });
     }
@@ -117,8 +113,8 @@ export class ProductoComponent implements OnInit {
             precioVenta:  0,
             stock:        0,
             stockMinimo:  20,
-            categoria:    { idCategoria: 0 },
-            proveedor:    { idProveedor: 0 }
+            idCategoria:  0,
+            idProveedor:  0
         });
         this.isEditing = false;
         this.editingId = null;

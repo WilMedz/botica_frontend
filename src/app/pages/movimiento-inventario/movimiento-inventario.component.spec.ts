@@ -1,0 +1,22 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { MovimientoInventarioComponent } from './movimiento-inventario.component';
+
+describe('MovimientoInventarioComponent', () => {
+  let component: MovimientoInventarioComponent;
+  let fixture: ComponentFixture<MovimientoInventarioComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MovimientoInventarioComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MovimientoInventarioComponent);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

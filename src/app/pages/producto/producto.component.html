@@ -4,7 +4,7 @@
     <h3>{{ isEditing ? 'Editar' : 'Nuevo' }} Producto</h3>
     <form [formGroup]="productoForm" (ngSubmit)="guardar()">
 
-        <!-- Nombre y Código -->
+        <!-- nombre y codigo -->
         <div class="form-row">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
@@ -23,18 +23,18 @@
             </div>
         </div>
 
-        <!-- Descripción -->
+        <!-- descripcion -->
         <div class="form-group">
             <label for="descripcion">Descripción:</label>
             <textarea id="descripcion" formControlName="descripcion" rows="2"
-                      placeholder="Descripción breve "></textarea>
+                      placeholder="Descripción breve"></textarea>
             <div class="error"
                  *ngIf="productoForm.get('descripcion')?.invalid && productoForm.get('descripcion')?.touched">
                 * La descripción es obligatoria
             </div>
         </div>
 
-        <!-- Precios -->
+        <!-- precio producto -->
         <div class="form-row">
             <div class="form-group">
                 <label for="precioCompra">Precio compra (S/):</label>
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <!-- Stock y Vencimiento -->
+        <!--stock y fecha de vencimiento -->
         <div class="form-row">
             <div class="form-group">
                 <label for="stock">Stock actual:</label>
@@ -83,44 +83,44 @@
             </div>
         </div>
 
-        <!-- Categoría y Proveedor -->
+        <!-- catgoria y proveedor-->
         <div class="form-row">
-            <div class="form-group" formGroupName="categoria">
+            <div class="form-group"> 
                 <label for="idCategoria">Categoría:</label>
                 <select id="idCategoria" formControlName="idCategoria">
                     <option [ngValue]="0" disabled>Seleccionar...</option>
-                    <option *ngFor="let c of categorias()" [ngValue]="c.idCategoria">
+                    <option *ngFor="let c of categorias" [ngValue]="c.idCategoria"> 
                         {{ c.nombre }}
                     </option>
                 </select>
                 <div class="error"
-                     *ngIf="productoForm.get('categoria.idCategoria')?.invalid && productoForm.get('categoria.idCategoria')?.touched">
+                     *ngIf="productoForm.get('idCategoria')?.invalid && productoForm.get('idCategoria')?.touched"> 
                     * Selecciona una categoría
                 </div>
             </div>
 
-            <div class="form-group" formGroupName="proveedor">
+            <div class="form-group">  
                 <label for="idProveedor">Proveedor:</label>
                 <select id="idProveedor" formControlName="idProveedor">
                     <option [ngValue]="0" disabled>Seleccionar...</option>
-                    <option *ngFor="let p of proveedores()" [ngValue]="p.idProveedor">
+                    <option *ngFor="let p of proveedores" [ngValue]="p.idProveedor"> 
                         {{ p.razonSocial }}
                     </option>
                 </select>
                 <div class="error"
-                     *ngIf="productoForm.get('proveedor.idProveedor')?.invalid && productoForm.get('proveedor.idProveedor')?.touched">
+                     *ngIf="productoForm.get('idProveedor')?.invalid && productoForm.get('idProveedor')?.touched">
                     * Selecciona un proveedor
                 </div>
             </div>
         </div>
 
-        <!-- Estado -->
+        <!-- estado -->
         <div class="form-group checkbox-group">
             <input type="checkbox" id="estado" formControlName="estado">
             <label for="estado">Activo</label>
         </div>
 
-        <!-- Acciones -->
+        <!-- acciones -->
         <div class="form-actions">
             <button type="submit" [disabled]="productoForm.invalid">
                 {{ isEditing ? 'Actualizar' : 'Guardar' }}
@@ -133,7 +133,7 @@
     </form>
 </div>
 
-<!-- Tabla -->
+<!-- tabla -->
 <h3>Lista de Productos</h3>
 <table class="tabla-productos">
     <thead>
@@ -153,7 +153,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let p of productos()">
+        <tr *ngFor="let p of productos"> 
             <td>{{ p.idProducto }}</td>
             <td>{{ p.nombre }}</td>
             <td>{{ p.codigoBarra || '—' }}</td>
@@ -162,15 +162,15 @@
             <td>{{ p.stock }}</td>
             <td>{{ p.stockMinimo }}</td>
             <td>{{ p.fechaVencimiento ? (p.fechaVencimiento | date:'dd/MM/yyyy') : '—' }}</td>
-            <td>{{ p.nombreCategoria || '—' }}</td>
-            <td>{{ p.razonSocialProveedor || '—' }}</td>
+            <td>{{ getNombreCategoria(p.idCategoria) }}</td>   
+            <td>{{ getRazonSocialProveedor(p.idProveedor) }}</td>  
             <td>{{ p.estado ? 'Activo' : 'Inactivo' }}</td>
             <td class="acciones">
                 <button (click)="editar(p)">Editar</button>
                 <button (click)="eliminar(p.idProducto)">Eliminar</button>
             </td>
         </tr>
-        <tr *ngIf="productos().length === 0">
+        <tr *ngIf="productos.length === 0">  
             <td colspan="12" class="tabla-vacia">No hay productos registrados.</td>
         </tr>
     </tbody>

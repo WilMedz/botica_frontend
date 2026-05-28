@@ -7,14 +7,19 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/rou
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class AppComponent {
   private router = inject(Router);
 
   getPagina(): string {
-    const ruta = this.router.url;
-    if (ruta.includes('dashboard')) return 'Dashboard';
-    if (ruta.includes('categorias')) return 'Categorías';
-    if (ruta.includes('proveedores')) return 'Proveedores';
+    const url = this.router.url;
+    if (url.includes('dashboard'))   return 'Dashboard';
+    if (url.includes('categorias'))  return 'Categorías';
+    if (url.includes('proveedores')) return 'Proveedores';
+    if (url.includes('clientes'))    return 'Clientes';
+    if (url.includes('productos'))   return 'Productos';
+    if (url.includes('ventas'))      return 'Ventas';
+    if (url.includes('usuarios'))    return 'Usuarios';
+    if (url.includes('roles'))       return 'Roles';
     return 'Dashboard';
   }
 }

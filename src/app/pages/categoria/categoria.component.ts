@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Categoria } from '../../model/categoria';
@@ -14,16 +14,16 @@ export class CategoriaComponent implements OnInit {
   private categoriaService = inject(CategoriaService);
   private fb = inject(FormBuilder);
 
-  categorias = signal<Categoria[]>([]);
+  categorias: Categoria[] = [];   
   categoriaForm: FormGroup;
   isEditing = false;
   editingId: number = 0;
 
   constructor() {
     this.categoriaForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      nombre:      ['', [Validators.required, Validators.minLength(3)]],
       descripcion: ['', [Validators.required]],
-      estado: [true]
+      estado:      [true]
     });
   }
 
@@ -32,7 +32,7 @@ export class CategoriaComponent implements OnInit {
   }
 
   cargarCategorias(): void {
-    this.categoriaService.findAll().subscribe(data => this.categorias.set(data));
+    this.categoriaService.findAll().subscribe(data => this.categorias = data); 
   }
 
   guardar(): void {
@@ -58,9 +58,9 @@ export class CategoriaComponent implements OnInit {
     this.isEditing = true;
     this.editingId = cat.idCategoria;
     this.categoriaForm.patchValue({
-      nombre: cat.nombre,
+      nombre:      cat.nombre,
       descripcion: cat.descripcion,
-      estado: cat.estado
+      estado:      cat.estado
     });
   }
 
