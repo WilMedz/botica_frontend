@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   totalProveedores = signal<number>(0);
   fechaHoy: string = '';
 
-  ngOnInit(): void {
+  ngOnInit(): void {      //trabajar con señales (signals de angular)
     this.categoriaService.findAll().subscribe(data => this.totalCategorias.set(data.length));
     this.proveedorService.findAll().subscribe(data => this.totalProveedores.set(data.length));
 

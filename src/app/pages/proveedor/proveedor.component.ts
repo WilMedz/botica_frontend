@@ -12,13 +12,13 @@ import { Proveedor } from '../../model/proveedor';
     styleUrl: './proveedor.component.css'
 })
 export class ProveedorComponent implements OnInit {
-    proveedores = signal<Proveedor[]>([]);
+    proveedores: Proveedor[] = [];
     proveedorForm: FormGroup;
     isEditing = false;
     editingId: number | null = null;
 
     private fb = inject(FormBuilder);
-    private service = inject(ProveedorService);
+    private proveedorService = inject(ProveedorService);
 
     constructor() {
         this.proveedorForm = this.fb.group({
@@ -36,7 +36,7 @@ export class ProveedorComponent implements OnInit {
     }
 
     cargarProveedores(): void {
-        this.service.findAll().subscribe(data => this.proveedores.set(data));
+        this.proveedorService.findAll().subscribe(data => this.proveedores = data);
     }
 
     guardar(): void {
@@ -46,12 +46,12 @@ export class ProveedorComponent implements OnInit {
         }
         const proveedor: Proveedor = this.proveedorForm.value;
         if (this.isEditing && this.editingId) {
-            this.service.update(this.editingId, proveedor).subscribe(() => {
+            this.proveedorService.update(this.editingId, proveedor).subscribe(() => {
                 this.cargarProveedores();
                 this.resetForm();
             });
         } else {
-            this.service.save(proveedor).subscribe(() => {
+            this.proveedorService.save(proveedor).subscribe(() => {
                 this.cargarProveedores();
                 this.resetForm();
             });
@@ -73,7 +73,7 @@ export class ProveedorComponent implements OnInit {
 
     eliminar(id: number): void {
         if (confirm('¿Eliminar proveedor?')) {
-            this.service.delete(id).subscribe(() => this.cargarProveedores());
+            this.proveedorService.delete(id).subscribe(() => this.cargarProveedores());
         }
     }
 
