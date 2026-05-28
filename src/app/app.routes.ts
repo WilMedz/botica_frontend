@@ -6,8 +6,7 @@ import { ProductoComponent }             from './pages/producto/producto.compone
 import { ClienteComponent }              from './pages/cliente/cliente.component';
 import { VentaComponent }                from './pages/venta/venta.component';
 import { MovimientoInventarioComponent } from './pages/movimiento-inventario/movimiento-inventario.component';
-import { UsuarioComponent }              from './pages/usuario/usuario.component';
-import { RolComponent }                  from './pages/rol/rol.component';
+
 
 export const routes: Routes = [
   { path: 'dashboard',    component: DashboardComponent },
@@ -17,7 +16,5 @@ export const routes: Routes = [
   { path: 'clientes',     component: ClienteComponent },
   { path: 'ventas',       component: VentaComponent },
   { path: 'movimientos',  component: MovimientoInventarioComponent },
-  { path: 'usuarios',     component: UsuarioComponent },
-  { path: 'roles',        component: RolComponent },
   { path: '',             redirectTo: 'dashboard', pathMatch: 'full' }
 ];

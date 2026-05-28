@@ -7,7 +7,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/rou
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class AppComponent {
+export class App {
   private router = inject(Router);
 
   getPagina(): string {
