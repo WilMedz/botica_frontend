@@ -9,7 +9,7 @@ export abstract class GenericSignalService<T> extends GenericService<T> {
     private readonly _list = signal<T[]>([]);
     private readonly _message = signal<string>('');
 
-    readonly $ListChange = this._list.asReadonly();
+    readonly $listChange = this._list.asReadonly();
     readonly $messageChange = this._message.asReadonly();
 
     setListChange(data: T[]) {

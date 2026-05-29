@@ -18,8 +18,7 @@ export class App {
     if (url.includes('clientes'))    return 'Clientes';
     if (url.includes('productos'))   return 'Productos';
     if (url.includes('ventas'))      return 'Ventas';
-    if (url.includes('usuarios'))    return 'Usuarios';
-    if (url.includes('roles'))       return 'Roles';
+    
     return 'Dashboard';
   }
 }

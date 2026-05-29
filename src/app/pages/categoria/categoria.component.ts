@@ -38,7 +38,7 @@ export class CategoriaComponent {
   protected $dataSource = signal(new MatTableDataSource<Categoria>());
   protected $paginator = viewChild(MatPaginator);
   protected $sort = viewChild(MatSort);
-  protected $categoria = this.categoriaService.$ListChange;
+  protected $categoria = this.categoriaService.$listChange;
 
   protected displayedColumns: string[] = ['idCategoria', 'nombre', 'descripcion', 'estado', 'acciones'];
 
