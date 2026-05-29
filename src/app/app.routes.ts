@@ -7,6 +7,7 @@ import { ProductoComponent }             from './pages/producto/producto.compone
 import { ClienteComponent }              from './pages/cliente/cliente.component';
 import { VentaComponent }                from './pages/venta/venta.component';
 import { MovimientoInventarioComponent } from './pages/movimiento-inventario/movimiento-inventario.component';
+import { ProductoEditComponent } from './pages/producto/producto-edit/producto-edit.component';
 
 export const routes: Routes = [
   { path: 'dashboard',   component: DashboardComponent },
@@ -15,7 +16,10 @@ export const routes: Routes = [
     { path: 'edit/:id',  component: CategoriaEditComponent }
   ]},
   { path: 'proveedores', component: ProveedorComponent },
-  { path: 'productos',   component: ProductoComponent },
+  { path: 'productos',   component: ProductoComponent, children: [
+    { path: 'new',       component: ProductoEditComponent },
+    { path: 'edit/:id',  component: ProductoEditComponent }
+  ]},
   { path: 'clientes',    component: ClienteComponent },
   { path: 'ventas',      component: VentaComponent },
   { path: 'movimientos', component: MovimientoInventarioComponent },

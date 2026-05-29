@@ -1,31 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { Injectable } from '@angular/core';
+import { GenericSignalService } from './generic-signal.service';
 import { Producto } from '../model/producto';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({ providedIn: 'root' })
-export class ProductoService {
-    private http = inject(HttpClient);
-    private apiUrl = environment.apiUrl + '/productos';
-
-    findAll(): Observable<Producto[]> {
-        return this.http.get<Producto[]>(this.apiUrl);
-    }
-
-    findById(id: number): Observable<Producto> {
-        return this.http.get<Producto>(`${this.apiUrl}/${id}`);
-    }
-
-    save(producto: Producto): Observable<void> {       // ← era Observable<Producto>
-        return this.http.post<void>(this.apiUrl, producto);
-    }
-
-    update(id: number, producto: Producto): Observable<Producto> {
-        return this.http.put<Producto>(`${this.apiUrl}/${id}`, producto);
-    }
-
-    delete(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`);
-    }
+export class ProductoService extends GenericSignalService<Producto> {
+  protected override url = `${environment.apiUrl}/productos`;
 }

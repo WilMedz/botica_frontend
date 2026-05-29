@@ -1,122 +1,82 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ProductoService }  from '../../services/producto.service';
-import { CategoriaService } from '../../services/categoria.service';
-import { ProveedorService } from '../../services/proveedor.service';
-import { Producto }  from '../../model/producto';
-import { Categoria } from '../../model/categoria';
-import { Proveedor } from '../../model/proveedor';
+import { Component, effect, inject, signal, untracked, viewChild } from '@angular/core';
+import { ProductoService } from '../../services/producto.service';
+import { Producto } from '../../model/producto';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-producto',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
-    templateUrl: './producto.component.html',
-    styleUrl: './producto.component.css'
+  selector: 'app-producto',
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule
+  ],
+  templateUrl: './producto.component.html',
+  styleUrl: './producto.component.css'
 })
-export class ProductoComponent implements OnInit {
-    productos:   Producto[]  = [];   
-    categorias:  Categoria[] = [];   
-    proveedores: Proveedor[] = [];   
+export class ProductoComponent {
+  private readonly productoService = inject(ProductoService);
+  private readonly snackBar = inject(MatSnackBar);
 
-    productoForm: FormGroup;
-    isEditing  = false;
-    editingId: number | null = null;
+  protected $dataSource = signal(new MatTableDataSource<Producto>());
+  protected $paginator = viewChild(MatPaginator);
+  protected $sort = viewChild(MatSort);
+  protected $productos = this.productoService.$listChange;
 
-    private fb               = inject(FormBuilder);
-    private service          = inject(ProductoService);
-    private categoriaService = inject(CategoriaService);
-    private proveedorService = inject(ProveedorService);
+  protected displayedColumns: string[] = ['idProducto', 'nombre', 'descripcion', 'precioVenta', 'stock', 'estado', 'acciones'];
 
-    constructor() {
-        this.productoForm = this.fb.group({
-            nombre:           ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-            descripcion:      ['', [Validators.required, Validators.maxLength(500)]],
-            codigoBarra:      ['', [Validators.maxLength(50)]],
-            precioCompra:     [0,  [Validators.required, Validators.min(0.01)]],
-            precioVenta:      [0,  [Validators.required, Validators.min(0.01)]],
-            stock:            [0,  [Validators.required, Validators.min(0)]],
-            stockMinimo:      [20, [Validators.required, Validators.min(0)]],
-            fechaVencimiento: [''],
-            idCategoria:      [0,  [Validators.required, Validators.min(1)]],
-            idProveedor:      [0,  [Validators.required, Validators.min(1)]],
-            estado:           [true]
-        });
+  constructor() {
+    this.productoService.findAll().subscribe(data => this.productoService.setListChange(data));
+
+    effect(() => {
+      const data = this.$productos();
+      const p = this.$paginator();
+      const s = this.$sort();
+      const ds = this.$dataSource();
+
+      ds.data = data;
+      ds.paginator = p;
+      ds.sort = s;
+    });
+
+    effect(() => {
+      const message = this.productoService.$messageChange();
+      if (message) {
+        this.snackBar.open(message, 'INFO', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
+        untracked(() => this.productoService.setMessageChange(''));
+      }
+    });
+  }
+
+  applyFilter(e: any) {
+    this.$dataSource().filter = e.target.value.trim().toLowerCase();
+  }
+
+  delete(id: number) {
+    const ok = window.confirm('¿Eliminar producto?');
+    if (ok) {
+      this.productoService.delete(id)
+        .pipe(
+          switchMap(() => this.productoService.findAll()),
+          tap(data => this.productoService.setListChange(data)),
+          tap(() => this.productoService.setMessageChange('ELIMINADO'))
+        )
+        .subscribe();
     }
-
-    ngOnInit(): void {
-        this.cargarProductos();
-        this.cargarCategorias();
-        this.cargarProveedores();
-    }
-
-    cargarProductos(): void {
-        this.service.findAll().subscribe(data => this.productos = data);   
-    }
-
-    cargarCategorias(): void {
-        this.categoriaService.findAll().subscribe(data => this.categorias = data);  
-    }
-
-    cargarProveedores(): void {
-        this.proveedorService.findAll().subscribe(data => this.proveedores = data); 
-    }
-
-    guardar(): void {
-        if (this.productoForm.invalid) {
-            alert('Corrige los errores del formulario');
-            return;
-        }
-        const producto: Producto = this.productoForm.value;
-        if (this.isEditing && this.editingId) {
-            this.service.update(this.editingId, producto).subscribe(() => {
-                this.cargarProductos();
-                this.resetForm();
-            });
-        } else {
-            this.service.save(producto).subscribe(() => {
-                this.cargarProductos();
-                this.resetForm();
-            });
-        }
-    }
-
-    editar(prod: Producto): void {
-        this.isEditing = true;
-        this.editingId = prod.idProducto;
-        this.productoForm.patchValue({
-            nombre:           prod.nombre,
-            descripcion:      prod.descripcion,
-            codigoBarra:      prod.codigoBarra,
-            precioCompra:     prod.precioCompra,
-            precioVenta:      prod.precioVenta,
-            stock:            prod.stock,
-            stockMinimo:      prod.stockMinimo,
-            fechaVencimiento: prod.fechaVencimiento,
-            idCategoria:      prod.idCategoria,
-            idProveedor:      prod.idProveedor,
-            estado:           prod.estado
-        });
-    }
-
-    eliminar(id: number): void {
-        if (confirm('¿Eliminar producto? Esta acción no se puede deshacer.')) {
-            this.service.delete(id).subscribe(() => this.cargarProductos());
-        }
-    }
-
-    resetForm(): void {
-        this.productoForm.reset({
-            estado:       true,
-            precioCompra: 0,
-            precioVenta:  0,
-            stock:        0,
-            stockMinimo:  20,
-            idCategoria:  0,
-            idProveedor:  0
-        });
-        this.isEditing = false;
-        this.editingId = null;
-    }
+  }
 }
