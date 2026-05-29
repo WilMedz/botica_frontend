@@ -1,78 +1,82 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Categoria } from '../../model/categoria';
-import { CategoriaService } from '../../services/categoria.service';
+import {Component, effect, inject, signal, untracked, viewChild} from '@angular/core';
+import {Categoria} from '../../model/categoria';
+import {CategoriaService} from '../../services/categoria.service';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {switchMap, tap} from 'rxjs';
+import { RouterLink, RouterOutlet } from '@angular/router';
+
 
 @Component({
   selector: 'app-categoria',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule
+  ],
   templateUrl: './categoria.component.html',
   styleUrl: './categoria.component.css'
 })
-export class CategoriaComponent implements OnInit {
-  private categoriaService = inject(CategoriaService);
-  private fb = inject(FormBuilder);
 
-  categorias: Categoria[] = [];   
-  categoriaForm: FormGroup;
-  isEditing = false;
-  editingId: number = 0;
+export class CategoriaComponent {
+  private readonly categoriaService = inject(CategoriaService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  protected $dataSource = signal(new MatTableDataSource<Categoria>());
+  protected $paginator = viewChild(MatPaginator);
+  protected $sort = viewChild(MatSort);
+  protected $categoria = this.categoriaService.$ListChange;
+
+  protected displayedColumns: string[] = ['idCategoria', 'nombre', 'descripcion', 'estado', 'acciones'];
 
   constructor() {
-    this.categoriaForm = this.fb.group({
-      nombre:      ['', [Validators.required, Validators.minLength(3)]],
-      descripcion: ['', [Validators.required]],
-      estado:      [true]
+    this.categoriaService.findAll().subscribe(data => this.categoriaService.setListChange(data));
+
+    effect(() => {
+      const data = this.$categoria();
+      const p = this.$paginator();
+      const s = this.$sort();
+      const ds = this.$dataSource();
+
+      ds.data = data;
+      ds.paginator = p;
+      ds.sort = s;
+    });
+
+    effect(() => {
+      const message = this.categoriaService.$messageChange();
+      if (message) {
+        this.snackBar.open(message, 'INFO', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
+        untracked(() => this.categoriaService.setMessageChange(''));
+      }
     });
   }
 
-  ngOnInit(): void {
-    this.cargarCategorias();
+  applyFilter(e: any) {
+    this.$dataSource().filter = e.target.value.trim().toLowerCase();
   }
 
-  cargarCategorias(): void {
-    this.categoriaService.findAll().subscribe(data => this.categorias = data); 
-  }
-
-  guardar(): void {
-    if (this.categoriaForm.invalid) {
-      alert('Corrige los errores del formulario');
-      return;
+  delete(id: number) {
+    const ok = window.confirm('¿Eliminar categoría?');
+    if (ok) {
+      this.categoriaService.delete(id).pipe(
+        switchMap(() => this.categoriaService.findAll()),
+        tap(data => this.categoriaService.setListChange(data)),
+        tap(() => this.categoriaService.setMessageChange('ELIMINADO'))
+      ).subscribe();
     }
-    const categoria: Categoria = this.categoriaForm.value;
-    if (this.isEditing) {
-      this.categoriaService.update(categoria, this.editingId).subscribe(() => {
-        this.cargarCategorias();
-        this.resetForm();
-      });
-    } else {
-      this.categoriaService.save(categoria).subscribe(() => {
-        this.cargarCategorias();
-        this.resetForm();
-      });
-    }
-  }
-
-  editar(cat: Categoria): void {
-    this.isEditing = true;
-    this.editingId = cat.idCategoria;
-    this.categoriaForm.patchValue({
-      nombre:      cat.nombre,
-      descripcion: cat.descripcion,
-      estado:      cat.estado
-    });
-  }
-
-  eliminar(id: number): void {
-    if (confirm('¿Eliminar categoría?')) {
-      this.categoriaService.delete(id).subscribe(() => this.cargarCategorias());
-    }
-  }
-
-  resetForm(): void {
-    this.categoriaForm.reset({ estado: true });
-    this.isEditing = false;
-    this.editingId = 0;
   }
 }

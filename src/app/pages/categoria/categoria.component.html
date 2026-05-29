@@ -1,57 +1,58 @@
-<h2>Gestión de Categorías</h2>
+<router-outlet></router-outlet>
 
-<div class="form-container">
-    <h3>{{ isEditing ? 'Editar' : 'Nueva' }} Categoría</h3>
-    <form [formGroup]="categoriaForm" (ngSubmit)="guardar()">
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" formControlName="nombre">
-            <div class="error" *ngIf="categoriaForm.get('nombre')?.invalid && categoriaForm.get('nombre')?.touched">
-                * Obligatorio (mínimo 3 caracteres)
-            </div>
-        </div>
+<mat-form-field>
+  <mat-label>Buscar</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Analgésicos" #input>
+</mat-form-field>
 
-        <div class="form-group">
-            <label for="descripcion">Descripción:</label>
-            <input type="text" id="descripcion" formControlName="descripcion">
-            <div class="error" *ngIf="categoriaForm.get('descripcion')?.invalid && categoriaForm.get('descripcion')?.touched">
-                * Obligatorio
-            </div>
-        </div>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="$dataSource()" matSort>
 
-        <div class="form-group checkbox-group">
-            <input type="checkbox" id="estado" formControlName="estado">
-            <label for="estado">Activo</label>
-        </div>
+    <ng-container matColumnDef="idCategoria">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.idCategoria}} </td>
+    </ng-container>
 
-        <div class="form-actions">
-            <button type="submit" [disabled]="categoriaForm.invalid">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-            <button type="button" (click)="resetForm()" *ngIf="isEditing">Cancelar</button>
-        </div>
-    </form>
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE </th>
+      <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="descripcion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> DESCRIPCIÓN </th>
+      <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTADO </th>
+      <td mat-cell *matCellDef="let row"> {{row.estado ? 'Activo' : 'Inactivo'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> ACCIONES </th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-flat-button [routerLink]="['edit', row.idCategoria]">
+          <span>Editar</span>
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-flat-button color="warn" (click)="delete(row.idCategoria)">
+          <span>Eliminar</span>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="5">No se encontraron resultados para "{{input.value}}"</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Seleccionar página"></mat-paginator>
+
+  <button mat-fab style="float: right; margin: 16px;" routerLink="new">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
-
-<h3>Lista de Categorías</h3>
-<table class="tabla-categorias">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let c of categorias">
-            <td>{{ c.idCategoria }}</td>
-            <td>{{ c.nombre }}</td>
-            <td>{{ c.descripcion }}</td>
-            <td>{{ c.estado ? 'Activo' : 'Inactivo' }}</td>
-            <td class="acciones">
-                <button (click)="editar(c)">Editar</button>
-                <button (click)="eliminar(c.idCategoria)">Eliminar</button>
-            </td>
-        </tr>
-    </tbody>
-</table>

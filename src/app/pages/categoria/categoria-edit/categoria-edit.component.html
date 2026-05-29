@@ -1,0 +1,37 @@
+<form [formGroup]="$form()" (submit)="operate()" class="form-container">
+
+  <div [hidden]="true">
+    <mat-form-field>
+      <mat-label>ID</mat-label>
+      <input matInput formControlName="idCategoria">
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre</mat-label>
+    <input matInput placeholder="Nombre de la categoría" formControlName="nombre">
+    <mat-error *ngIf="$form().get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+    <mat-error *ngIf="$form().get('nombre')?.hasError('minlength')">Mínimo 3 caracteres</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Descripción</mat-label>
+    <input matInput placeholder="Descripción" formControlName="descripcion">
+    <mat-error *ngIf="$form().get('descripcion')?.hasError('required')">La descripción es obligatoria</mat-error>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="estado">Activo</mat-checkbox>
+
+  <div class="form-actions">
+    <button mat-flat-button type="submit" [disabled]="$form().invalid">
+      <span>{{ $isEdit() ? 'Actualizar' : 'Guardar' }}</span>
+      <mat-icon>done</mat-icon>
+    </button>
+
+    <button mat-flat-button type="button" routerLink="/categorias">
+      <span>Cancelar</span>
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+
+</form>
