@@ -1,0 +1,109 @@
+<div class="edit-container">
+  <h3>{{ $isEdit() ? 'Editar / Detalle de' : 'Nueva' }} Venta</h3>
+
+  <form [formGroup]="$form()" (ngSubmit)="operate()" class="form-layout">
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Cliente</mat-label>
+        <mat-select formControlName="idCliente" required>
+          <mat-option *ngFor="let c of clientes()" [value]="c.idCliente">
+            {{ c.nombre }} {{ c.apellido }} (Doc: {{ c.documento }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="$form().get('idCliente')?.hasError('required')">El cliente es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Estado de la Venta</mat-label>
+        <mat-select formControlName="estado" required>
+          <mat-option value="PAGADO">PAGADO</mat-option>
+          <mat-option value="ANULADO">ANULADO</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Observación / Comentarios</mat-label>
+      <input matInput formControlName="observacion" placeholder="Detalles de facturación, entrega, etc.">
+    </mat-form-field>
+
+    <!-- AGREGAR DETALLE DE PRODUCTOS (Solo editable en creación/edición, pero deshabilitamos o permitimos agregar) -->
+    <div class="productos-seccion">
+      <h4>Detalle de Productos</h4>
+
+      <div class="agregar-producto-form" [formGroup]="detailForm">
+        <mat-form-field appearance="outline" style="flex: 2;">
+          <mat-label>Seleccionar Producto</mat-label>
+          <mat-select formControlName="idProducto">
+            <mat-option *ngFor="let p of productos()" [value]="p.idProducto">
+              {{ p.nombre }} - S/.{{ p.precioVenta }} (Stock: {{ p.stock }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="flex: 1;">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" formControlName="cantidad">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="flex: 1;">
+          <mat-label>P. Unitario</mat-label>
+          <input matInput type="number" formControlName="precioUnitario">
+        </mat-form-field>
+
+        <button mat-flat-button color="accent" type="button" (click)="agregarDetalle()" [disabled]="detailForm.invalid">
+          <mat-icon>add</mat-icon>
+          <span>Agregar</span>
+        </button>
+      </div>
+
+      <!-- TABLA DE DETALLES -->
+      <table class="tabla-detalles">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>P. Unitario</th>
+            <th>Subtotal</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of detalles(); let i = index">
+            <td>{{ item.nombreProducto }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>S/. {{ item.precioUnitario | number:'1.2-2' }}</td>
+            <td>S/. {{ item.subtotal | number:'1.2-2' }}</td>
+            <td>
+              <button mat-icon-button color="warn" type="button" (click)="eliminarDetalle(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="detalles().length === 0">
+            <td colspan="5" class="empty-table">No se han agregado productos a la venta.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PANEL RESUMEN DE TOTAL -->
+    <div class="resumen-total">
+      <span>Total Venta:</span>
+      <h2>S/. {{ $form().get('total')?.value | number:'1.2-2' }}</h2>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="$form().invalid || detalles().length === 0">
+        <mat-icon>save</mat-icon>
+        <span>Guardar Venta</span>
+      </button>
+      <button mat-button type="button" routerLink="/ventas">
+        <mat-icon>cancel</mat-icon>
+        <span>Cancelar</span>
+      </button>
+    </div>
+
+  </form>
+</div>

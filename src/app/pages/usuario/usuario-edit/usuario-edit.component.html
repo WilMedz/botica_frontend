@@ -1,0 +1,68 @@
+<div class="edit-container">
+  <h3>{{ $isEdit() ? 'Editar' : 'Nuevo' }} Usuario</h3>
+
+  <form [formGroup]="$form()" (ngSubmit)="operate()" class="form-layout">
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombres</mat-label>
+        <input matInput formControlName="nombre" placeholder="Nombre" required>
+        <mat-error *ngIf="$form().get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Apellidos</mat-label>
+        <input matInput formControlName="apellido" placeholder="Apellido" required>
+        <mat-error *ngIf="$form().get('apellido')?.hasError('required')">El apellido es obligatorio</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Usuario (Username)</mat-label>
+        <input matInput formControlName="username" placeholder="Ej. jperez" required>
+        <mat-error *ngIf="$form().get('username')?.hasError('required')">El username es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Contraseña">
+        <mat-error *ngIf="$form().get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="correo@ejemplo.com">
+        <mat-error *ngIf="$form().get('email')?.hasError('email')">Formato de correo inválido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rol de Usuario</mat-label>
+        <mat-select formControlName="idRol" required>
+          <mat-option *ngFor="let r of roles()" [value]="r.idRol">
+            {{ r.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="$form().get('idRol')?.hasError('required')">El rol es obligatorio</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="status-row">
+      <mat-checkbox formControlName="estado">Activo</mat-checkbox>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="$form().invalid">
+        <mat-icon>save</mat-icon>
+        <span>Aceptar</span>
+      </button>
+      <button mat-button type="button" routerLink="/usuarios">
+        <mat-icon>cancel</mat-icon>
+        <span>Cancelar</span>
+      </button>
+    </div>
+
+  </form>
+</div>
