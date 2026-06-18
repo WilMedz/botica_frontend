@@ -1,0 +1,12 @@
+/* Cambio de color suave cuando el mouse pasa por encima de la opción */
+.sidebar-menu a:hover {
+    background-color: #334155;
+    color: #ffffff !important;
+}
+
+/* Estilo automático para resaltar la página en la que se encuentra el usuario actualmente */
+.active-link {
+    background-color: #2563eb !important; /* Azul profesional */
+    color: #ffffff !important;
+    font-weight: 600;
+}

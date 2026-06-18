@@ -1,1 +1,55 @@
-<p>layout works!</p>
+<div class="dashboard-container" style="display: flex; height: 100vh; font-family: sans-serif;">
+  
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside class="sidebar" style="width: 260px; background-color: #1e293b; color: white; display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <!-- Encabezado de la Botica -->
+      <div class="sidebar-header" style="padding: 20px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 10px;">
+        <span>💊 Botica Sistema</span>
+      </div>
+
+      <!-- Menús renderizados dinámicamente según el Rol -->
+      <nav class="sidebar-menu" style="padding: 15px 0;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          @for (menu of menus(); track menu.idMenu) {
+            <li style="margin-bottom: 5px;">
+              <a [routerLink]="menu.url" 
+                 routerLinkActive="active-link"
+                 [routerLinkActiveOptions]="{exact: true}"
+                 style="display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; font-size: 0.95rem; transition: background 0.2s;">
+                <!-- Icono dinámico enviado desde la Base de Datos -->
+                <i class="material-icons">{{ menu.icono }}</i>
+                <span>{{ menu.nombre }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Botón de Cerrar Sesión en la parte inferior -->
+    <div class="sidebar-footer" style="padding: 20px; border-top: 1px solid #334155;">
+      <a href="/login" style="display: flex; align-items: center; gap: 12px; color: #ef4444; text-decoration: none; font-size: 0.95rem;">
+        <i class="material-icons">logout</i>
+        <span>Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- CONTENEDOR DE CONTENIDO PRINCIPAL -->
+  <main class="main-content" style="flex: 1; background-color: #f8fafc; display: flex; flex-direction: column; overflow-y: auto;">
+    
+    <!-- Barra superior decorativa (Navbar) -->
+    <header class="top-navbar" style="height: 60px; background-color: white; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: flex-end; padding: 0 30px;">
+      <div style="display: flex; align-items: center; gap: 10px; color: #475569;">
+        <i class="material-icons">account_circle</i>
+        <span style="font-weight: 500;">Usuario Conectado</span>
+      </div>
+    </header>
+
+    <!-- Espacio dinámico de Angular donde se pintará el CRUD de Categoria, Proveedor, etc. -->
+    <section class="content-body" style="padding: 30px; flex: 1;">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>
