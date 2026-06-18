@@ -7,5 +7,5 @@ import {environment} from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class ClienteService extends GenericSignalService<Cliente> {
-  protected override url: string = `${environment.apiUrl}/clientes`;
+  protected override url: string = `${environment.HOST}/clientes`;
 }

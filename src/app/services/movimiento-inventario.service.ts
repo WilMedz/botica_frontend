@@ -7,5 +7,5 @@ import {environment} from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class MovimientoInventarioService extends GenericSignalService<MovimientoInventario> {
-  protected override url: string = `${environment.apiUrl}/movimientos-inventario`;
+  protected override url: string = `${environment.HOST}/movimientos-inventario`;
 }

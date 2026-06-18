@@ -5,5 +5,5 @@ import { environment } from '../../environments/environment.development';
 
 @Injectable({ providedIn: 'root' })
 export class ProductoService extends GenericSignalService<Producto> {
-  protected override url = `${environment.apiUrl}/productos`;
+  protected override url = `${environment.HOST}/productos`;
 }

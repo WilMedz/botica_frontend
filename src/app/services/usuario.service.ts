@@ -7,5 +7,5 @@ import {environment} from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class UsuarioService extends GenericSignalService<Usuario> {
-  protected override url: string = `${environment.apiUrl}/usuarios`;
+  protected override url: string = `${environment.HOST}/usuarios`;
 }

@@ -7,5 +7,5 @@ import {environment} from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class VentaService extends GenericSignalService<Venta> {
-  protected override url: string = `${environment.apiUrl}/ventas`;
+  protected override url: string = `${environment.HOST}/ventas`;
 }

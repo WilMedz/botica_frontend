@@ -10,7 +10,7 @@ import { tap } from 'rxjs';
 export class MenuService extends GenericSignalService<Menu> {
 
   // Implementamos la propiedad abstracta obligatoria requerida por el padre
-  override url: string = `${environment.apiUrl}/menus`;
+  override url: string = `${environment.HOST}/menus`;
 
   // Signal reactivo para almacenar los menús en memoria
   public menusSignal = signal<Menu[]>([]);

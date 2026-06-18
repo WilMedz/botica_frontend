@@ -7,5 +7,5 @@ import {environment} from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class CategoriaService extends GenericSignalService<Categoria> {
-  protected override url: string = `${environment.apiUrl}/categorias`;
+  protected override url: string = `${environment.HOST}/categorias`;
 }

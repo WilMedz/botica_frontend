@@ -7,5 +7,5 @@ import {environment} from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class RolService extends GenericSignalService<Rol> {
-  protected override url: string = `${environment.apiUrl}/roles`;
+  protected override url: string = `${environment.HOST}/roles`;
 }

@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment.development';
 @Injectable({ providedIn: 'root' })
 export class ProveedorService extends GenericSignalService<Proveedor> {
     // Definimos la URL obligatoria que pide la clase abstracta
-    override url = `${environment.apiUrl}/proveedores`;
+    override url = `${environment.HOST}/proveedores`;
 
     constructor() {
         super();
