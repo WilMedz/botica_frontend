@@ -1,5 +1,3 @@
-import { HOST_TAG_NAME } from "@angular/core";
-
 export const environment = {
     HOST: 'http://localhost:8181',
     TOKEN_NAME: 'access_token'
