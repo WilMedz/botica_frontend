@@ -1,8 +1,12 @@
-import { Component, inject, OnInit, signal, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, signal, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CategoriaService } from '../../services/categoria.service';
+import { ClienteService } from '../../services/cliente.service';
 import { ProveedorService } from '../../services/proveedor.service';
 import { Chart, registerables } from 'chart.js';
+import { VentaService } from '../../services/venta.service';
+import { ProductoService } from '../../services/producto.service';
+import { Venta } from '../../model/venta';
 
 Chart.register(...registerables);
 
@@ -12,20 +16,38 @@ Chart.register(...registerables);
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit {
   private categoriaService = inject(CategoriaService);
   private proveedorService = inject(ProveedorService);
+  private productoService = inject(ProductoService);
+  private clienteService = inject(ClienteService);
+  private ventaService = inject(VentaService);
 
   @ViewChild('ventasChart') ventasChart!: ElementRef;
   @ViewChild('ingresosChart') ingresosChart!: ElementRef;
 
   totalCategorias = signal<number>(0);
   totalProveedores = signal<number>(0);
+  totalProductos = signal<number>(0);
+  totalClientes = signal<number>(0);
+  totalVentas = signal<number>(0);
+  ventasRecientes = signal<Venta[]>([]);
   fechaHoy: string = '';
 
   ngOnInit(): void {      //trabajar con señales (signals de angular)
     this.categoriaService.findAll().subscribe(data => this.totalCategorias.set(data.length));
     this.proveedorService.findAll().subscribe(data => this.totalProveedores.set(data.length));
+    this.productoService.findAll().subscribe(data => this.totalProductos.set(data.length));
+    this.clienteService.findAll().subscribe(data => this.totalClientes.set(data.length));
+    this.ventaService.findAll().subscribe(data => {
+      this.totalVentas.set(data.length);
+
+      const ordenadas = [...data].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+      this.ventasRecientes.set(ordenadas.slice(0, 5));
+
+      const { labels, conteoVentas, sumaIngresos } = this.calcularDatosGrafico(data, 7);
+      this.crearGraficos(labels, conteoVentas, sumaIngresos);
+    });
 
     const hoy = new Date();
     this.fechaHoy = hoy.toLocaleDateString('es-PE', {
@@ -33,11 +55,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    const labels = this.obtenerUltimosDias(7);
-    const ventas = [5, 3, 8, 4, 7, 6, 9];
-    const ingresos = [320, 150, 480, 210, 390, 275, 430];
-
+  crearGraficos(labels: string[], ventas: number[], ingresos: number[]): void {
     new Chart(this.ventasChart.nativeElement, {
       type: 'bar',
       data: {
@@ -85,6 +103,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  }
+
+  calcularDatosGrafico(ventas: Venta[], dias: number) {
+    const labels = this.obtenerUltimosDias(dias);
+    const conteoVentas: number[] = new Array(dias).fill(0);
+    const sumaIngresos: number[] = new Array(dias).fill(0);
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    for (const venta of ventas) {
+      const fechaVenta = new Date(venta.fecha);
+      fechaVenta.setHours(0, 0, 0, 0);
+
+      const diffDias = Math.round((hoy.getTime() - fechaVenta.getTime()) / (1000 * 60 * 60 * 24));
+
+      if (diffDias >= 0 && diffDias < dias) {
+        const index = dias - 1 - diffDias;
+        conteoVentas[index]++;
+        sumaIngresos[index] += venta.total;
+      }
+    }
+
+    return { labels, conteoVentas, sumaIngresos };
   }
 
   obtenerUltimosDias(n: number): string[] {

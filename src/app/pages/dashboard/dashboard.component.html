@@ -39,7 +39,7 @@
         <span class="material-icons">inventory_2</span>
       </div>
     </div>
-    <div class="tarjeta-numero">0</div>
+    <div class="tarjeta-numero">{{ totalProductos() }}</div>
     <span class="tarjeta-tendencia tendencia-pos">▲ Total registrados</span>
   </div>
 
@@ -50,7 +50,7 @@
         <span class="material-icons">people</span>
       </div>
     </div>
-    <div class="tarjeta-numero">0</div>
+    <div class="tarjeta-numero">{{ totalClientes() }}</div>
     <span class="tarjeta-tendencia tendencia-pos">▲ Total registrados</span>
   </div>
 
@@ -61,7 +61,7 @@
         <span class="material-icons">receipt_long</span>
       </div>
     </div>
-    <div class="tarjeta-numero">0</div>
+    <div class="tarjeta-numero">{{ totalVentas() }}</div>
     <span class="tarjeta-tendencia tendencia-pos">▲ Total registradas</span>
   </div>
 </div>
@@ -117,35 +117,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Juan Pérez</td>
-        <td>18 may. 2026</td>
-        <td>S/. 45.00</td>
-        <td><span class="estado-pagado">PAGADO</span></td>
-      </tr>
-      <tr>
-        <td>María López</td>
-        <td>18 may. 2026</td>
-        <td>S/. 120.50</td>
-        <td><span class="estado-pagado">PAGADO</span></td>
-      </tr>
-      <tr>
-        <td>Carlos Ruiz</td>
-        <td>17 may. 2026</td>
-        <td>S/. 30.00</td>
-        <td><span class="estado-anulado">ANULADO</span></td>
-      </tr>
-      <tr>
-        <td>Ana Torres</td>
-        <td>17 may. 2026</td>
-        <td>S/. 75.00</td>
-        <td><span class="estado-pagado">PAGADO</span></td>
-      </tr>
-      <tr>
-        <td>Luis Díaz</td>
-        <td>16 may. 2026</td>
-        <td>S/. 200.00</td>
-        <td><span class="estado-pagado">PAGADO</span></td>
+      <tr *ngFor="let venta of ventasRecientes()">
+        <td>{{ venta.nombreCliente }}</td>
+        <td>{{ venta.fecha | date:'dd MMM. yyyy' }}</td>
+        <td>S/. {{ venta.total.toFixed(2) }}</td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'badge-pagado': venta.estado === 'PAGADO',
+            'badge-anulado': venta.estado === 'ANULADO'
+          }">{{ venta.estado }}</span>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -8,4 +8,9 @@ import {environment} from '../../environments/environment.development';
 })
 export class UsuarioService extends GenericSignalService<Usuario> {
   protected override url: string = `${environment.HOST}/usuarios`;
+
+  getMe() {
+    return this.http.get<Usuario>(`${this.url}/me`);
+  }
 }
+
