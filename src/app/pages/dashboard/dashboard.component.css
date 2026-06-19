@@ -1,13 +1,13 @@
 h2 {
   font-size: 22px;
-  color: #1e1e2f;
+  color: #ffffff;
   margin-bottom: 5px;
 }
 
 .subtitulo {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 14px;
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 
 .tarjetas {
@@ -44,6 +44,7 @@ h2 {
   font-size: 26px;
 }
 
+/* ── Colores fijos por categoría (sin cambios) ── */
 .icono-verde {
   background-color: #d1fae5;
   color: #059669;
@@ -64,6 +65,11 @@ h2 {
   color: #7c3aed;
 }
 
+.icono-rojo {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
 .tarjeta-info {
   display: flex;
   flex-direction: column;
@@ -81,11 +87,16 @@ h2 {
   margin-top: 2px;
 }
 
+/* ── Barra superior del dashboard ── */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  background: linear-gradient(135deg, #1e3799 0%, #0c2461 100%);
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(21, 101, 192, 0.35);
 }
 
 .dashboard-acciones {
@@ -96,7 +107,7 @@ h2 {
 
 .fecha {
   font-size: 13px;
-  color: #6b7280;
+  color: #1e3799;
   background: white;
   padding: 8px 15px;
   border-radius: 8px;
@@ -104,19 +115,14 @@ h2 {
 }
 
 .btn-export {
-  background-color: #e5e7eb;
-  color: #9ca3af;
-  border: none;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.30);
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 13px;
   cursor: not-allowed;
   font-family: 'Inter', sans-serif;
-}
-
-.icono-rojo {
-  background-color: #fee2e2;
-  color: #dc2626;
 }
 
 .tabla-ventas-container {
@@ -143,14 +149,15 @@ h2 {
 }
 
 .btn-ver-todo {
-  background: #e5e7eb;
-  color: #9ca3af;
+  background: linear-gradient(135deg,  #1e3799 0%, #0c2461 50%, #1e3799 100%);
+  color: #ffffff;
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 13px;
   cursor: not-allowed;
   font-family: 'Inter', sans-serif;
+  box-shadow: 0 2px 10px rgba(21, 101, 192, 0.35);
 }
 
 .tabla-ventas {
@@ -221,8 +228,9 @@ h2 {
 }
 
 .btn-filtro.activo {
-  background: #ede9fe;
-  color: #7c3aed;
+  background: #dbeafe;
+  color: #2a4b70;
+  font-weight: 600;
 }
 
 canvas {
@@ -263,17 +271,6 @@ canvas {
   margin-bottom: 20px;
 }
 
-.btn-ver-todo {
-  background: #e5e7eb;
-  color: #9ca3af;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  cursor: not-allowed;
-  font-family: 'Inter', sans-serif;
-}
-
 .tabla-last-sales {
   width: 100%;
   border-collapse: collapse;
@@ -292,22 +289,4 @@ canvas {
   font-size: 14px;
   border-bottom: 1px solid #f3f4f6;
   color: #9ca3af;
-}
-
-.estado-pagado {
-  background-color: #d1fae5;
-  color: #059669;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.estado-anulado {
-  background-color: #fee2e2;
-  color: #dc2626;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
 }
