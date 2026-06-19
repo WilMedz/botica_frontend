@@ -12,7 +12,7 @@
     align-items: center;
     height: 100vh;
     font-family: 'Lato', sans-serif;
-    background: radial-gradient(ellipse at top left, #1e3a8a 0%, #2563eb 35%, #3b82f6 60%, #60a5fa 85%, #93c5fd 100%);
+    background: radial-gradient(ellipse at top left, #0c2461 0%, #1e3799 35%, #0a3d91 60%, #1565c0 85%, #082567 100%);
 }
 
 /* ── Tarjeta glassmorphism ── */
@@ -20,12 +20,12 @@
     width: 360px;
     padding: 48px 40px 44px;
     border-radius: 20px;
-    background: linear-gradient(145deg, #4f46e5 0%, #6366f1 100%);
+    background: linear-gradient(145deg, #1e3799 0%, #0c2461 100%);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.20);
     box-shadow:
-        0 8px 40px rgba(79, 70, 229, 0.45),
+        0 8px 40px rgba(21, 101, 192, 0.50),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
     display: flex;
     flex-direction: column;
@@ -128,7 +128,7 @@ form {
     width: 100%;
     height: 50px;
     margin-top: 32px;
-    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 50%, #1e3799 100%);
     color: #ffffff;
     font-family: 'Lato', sans-serif;
     font-size: 13px;
@@ -139,18 +139,18 @@ form {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.55);
+    box-shadow: 0 4px 20px rgba(21, 101, 192, 0.55);
 }
 
 .login-btn:hover:not([disabled]) {
-    background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 50%, #283593 100%);
     transform: translateY(-1px);
-    box-shadow: 0 6px 26px rgba(79, 70, 229, 0.65);
+    box-shadow: 0 6px 26px rgba(21, 101, 192, 0.65);
 }
 
 .login-btn:active:not([disabled]) {
     transform: translateY(0);
-    box-shadow: 0 2px 12px rgba(79, 70, 229, 0.45);
+    box-shadow: 0 2px 12px rgba(21, 101, 192, 0.45);
 }
 
 .login-btn[disabled] {
