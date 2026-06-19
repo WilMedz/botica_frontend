@@ -1,22 +1,22 @@
-<div class="dashboard-container" style="display: flex; height: 100vh; font-family: sans-serif;">
+<div class="dashboard-container">
   
   <!-- BARRA LATERAL (SIDEBAR) -->
-  <aside class="sidebar" style="width: 260px; background-color: #1e293b; color: white; display: flex; flex-direction: column; justify-content: space-between;">
+  <aside class="sidebar">
     <div>
       <!-- Encabezado de la Botica -->
-      <div class="sidebar-header" style="padding: 20px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 10px;">
-        <span>💊 Botica Sistema</span>
+      <div class="sidebar-header">
+        <img src="images/imagotipo-marleny.png" alt="Botica MarlenyFarma" class="logo-img">
       </div>
 
       <!-- Menús renderizados dinámicamente según el Rol -->
-      <nav class="sidebar-menu" style="padding: 15px 0;">
-        <ul style="list-style: none; padding: 0; margin: 0;">
+      <nav class="sidebar-menu">
+        <p class="menu-section-title">GENERAL</p>
+        <ul>
           @for (menu of menus(); track menu.idMenu) {
-            <li style="margin-bottom: 5px;">
+            <li>
               <a [routerLink]="menu.url" 
                  routerLinkActive="active-link"
-                 [routerLinkActiveOptions]="{exact: true}"
-                 style="display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; font-size: 0.95rem; transition: background 0.2s;">
+                 [routerLinkActiveOptions]="{exact: true}">
                 <!-- Icono dinámico enviado desde la Base de Datos -->
                 <i class="material-icons">{{ menu.icono }}</i>
                 <span>{{ menu.nombre }}</span>
@@ -28,8 +28,8 @@
     </div>
 
     <!-- Botón de Cerrar Sesión en la parte inferior -->
-    <div class="sidebar-footer" style="padding: 20px; border-top: 1px solid #334155;">
-      <a href="/login" style="display: flex; align-items: center; gap: 12px; color: #ef4444; text-decoration: none; font-size: 0.95rem;">
+    <div class="sidebar-footer">
+      <a href="/login" class="logout-link">
         <i class="material-icons">logout</i>
         <span>Cerrar Sesión</span>
       </a>
@@ -37,18 +37,35 @@
   </aside>
 
   <!-- CONTENEDOR DE CONTENIDO PRINCIPAL -->
-  <main class="main-content" style="flex: 1; background-color: #f8fafc; display: flex; flex-direction: column; overflow-y: auto;">
+  <main class="main-content">
     
     <!-- Barra superior decorativa (Navbar) -->
-    <header class="top-navbar" style="height: 60px; background-color: white; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: flex-end; padding: 0 30px;">
-      <div style="display: flex; align-items: center; gap: 10px; color: #475569;">
-        <i class="material-icons">account_circle</i>
-        <span style="font-weight: 500;">Usuario Conectado</span>
+    <header class="top-navbar">
+      <div class="breadcrumb">
+        <i class="material-icons">description</i>
+        <span>Páginas</span>
+        <span class="separator">›</span>
+        <span class="current-page">Dashboard</span>
+      </div>
+
+      <div class="search-bar">
+        <i class="material-icons">search</i>
+        <input type="text" placeholder="Buscar...">
+      </div>
+
+      <div class="navbar-actions">
+        <i class="material-icons">notifications_none</i>
+        <i class="material-icons">settings</i>
+        <div class="user-chip">
+          <i class="material-icons">account-circle</i>
+          <span>Admin</span>
+          <I class="material-icons dropdown-icon">expand_more</I>
+        </div>
       </div>
     </header>
 
     <!-- Espacio dinámico de Angular donde se pintará el CRUD de Categoria, Proveedor, etc. -->
-    <section class="content-body" style="padding: 30px; flex: 1;">
+    <section class="content-body">
       <router-outlet></router-outlet>
     </section>
   </main>

@@ -12,7 +12,7 @@
     align-items: center;
     height: 100vh;
     font-family: 'Lato', sans-serif;
-    background: radial-gradient(ellipse at top left, #064e2b 0%, #0a6b3a 35%, #0d7a43 60%, #0f8f50 85%, #12a65e 100%);
+    background: radial-gradient(ellipse at top left, #1e3a8a 0%, #2563eb 35%, #3b82f6 60%, #60a5fa 85%, #93c5fd 100%);
 }
 
 /* ── Tarjeta glassmorphism ── */
@@ -20,12 +20,12 @@
     width: 360px;
     padding: 48px 40px 44px;
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.10);
+    background: linear-gradient(145deg, #4f46e5 0%, #6366f1 100%);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.20);
     box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.30),
+        0 8px 40px rgba(79, 70, 229, 0.45),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
     display: flex;
     flex-direction: column;
@@ -34,8 +34,8 @@
 
 /* ── Cruz farmacéutica ── */
 .avatar {
-    width: 88px;
-    height: 88px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.12);
     border: 2px solid rgba(255, 255, 255, 0.22);
@@ -86,7 +86,7 @@ form {
 }
 
 .input-group:focus-within {
-    border-bottom-color: #a8f0c6;
+    border-bottom-color: #ffffff;
 }
 
 .input-icon {
@@ -128,7 +128,7 @@ form {
     width: 100%;
     height: 50px;
     margin-top: 32px;
-    background: linear-gradient(135deg, #065f35 0%, #0a8f50 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
     color: #ffffff;
     font-family: 'Lato', sans-serif;
     font-size: 13px;
@@ -139,23 +139,29 @@ form {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-    box-shadow: 0 4px 20px rgba(6, 95, 53, 0.55);
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.55);
 }
 
 .login-btn:hover:not([disabled]) {
-    background: linear-gradient(135deg, #077a43 0%, #0db865 100%);
+    background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
     transform: translateY(-1px);
-    box-shadow: 0 6px 26px rgba(6, 95, 53, 0.65);
+    box-shadow: 0 6px 26px rgba(79, 70, 229, 0.65);
 }
 
 .login-btn:active:not([disabled]) {
     transform: translateY(0);
-    box-shadow: 0 2px 12px rgba(6, 95, 53, 0.45);
+    box-shadow: 0 2px 12px rgba(79, 70, 229, 0.45);
 }
 
 .login-btn[disabled] {
     opacity: 0.40;
     cursor: not-allowed;
+}
+
+.avatar-img {
+    width: 170%;
+    height: 170%;
+    object-fit: contain;
 }
 
 /* ── Responsive ── */
