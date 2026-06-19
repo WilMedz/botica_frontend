@@ -20,8 +20,8 @@
 }
 
 .sidebar-header {
-  padding: 24px 16px;
   margin: 16px;
+  padding: 24px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,7 +84,7 @@
   background-color: #eef2ff !important;
   color: #4f46e5 !important;
   font-weight: 600;
-  padding-left: 16px;
+  padding-left: 16px !important;
 }
 
 .active-link .material-icons {
@@ -100,7 +100,7 @@
   width: 4px;
   height: 60%;
   background-color: #4f46e5;
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px;
 }
 
 .sidebar-footer {
@@ -128,27 +128,34 @@
 
 /* ===== TOP NAVBAR ===== */
 .top-navbar {
-  height: 64px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  height: auto;
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  border-bottom: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
-  gap: 24px;
+  margin: 16px 28px 0;
+  padding: 12px 16px;
+  gap: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
 }
 
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 0.85rem;
   white-space: nowrap;
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 10px;
 }
 
 .breadcrumb .material-icons {
   font-size: 1.1rem;
+  color: #9ca3af;
 }
 
 .breadcrumb .current-page {
@@ -162,9 +169,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #f3f4f6;
+  background-color: #ffffff;
   border-radius: 10px;
-  padding: 8px 14px;
+  padding: 10px 16px;
 }
 
 .search-bar .material-icons {
@@ -181,15 +188,23 @@
   color: #374151;
 }
 
+.search-bar input::placeholder {
+  color: #9ca3af;
+}
+
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 10px;
   color: #6b7280;
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 10px;
 }
 
 .navbar-actions > .material-icons {
   cursor: pointer;
+  color: #6b7280;
 }
 
 .user-chip {
@@ -204,6 +219,7 @@
 
 .dropdown-icon {
   font-size: 1.1rem;
+  color: #6b7280;
 }
 
 /* ===== CONTENT BODY ===== */
