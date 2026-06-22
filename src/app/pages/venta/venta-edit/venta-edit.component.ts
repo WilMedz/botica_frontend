@@ -41,8 +41,8 @@ export class VentaEditComponent {
   protected clientes = signal<Cliente[]>([]);
   protected productos = signal<Producto[]>([]);
   protected detalles = signal<DetalleVenta[]>([]);
+  protected detallesOriginales = signal<DetalleVenta[]>([]);
 
-  // Formulario principal
   protected $form = signal(new FormGroup({
     idVenta:     new FormControl<number | null>(null),
     idCliente:   new FormControl<number | null>(null, [Validators.required]),
@@ -52,7 +52,6 @@ export class VentaEditComponent {
     observacion: new FormControl<string>(''),
   }));
 
-  // Formulario auxiliar para agregar productos al detalle
   protected detailForm = new FormGroup({
     idProducto:     new FormControl<number | null>(null, [Validators.required]),
     cantidad:       new FormControl<number>(1, [Validators.required, Validators.min(1)]),
@@ -67,7 +66,6 @@ export class VentaEditComponent {
     this.clienteService.findAll().subscribe(data => this.clientes.set(data));
     this.productoService.findAll().subscribe(data => this.productos.set(data));
 
-    // Si el usuario selecciona un producto en el formulario de detalle, pre-cargar su precio
     this.detailForm.get('idProducto')?.valueChanges.subscribe(prodId => {
       if (prodId) {
         const prod = this.productos().find(p => p.idProducto === prodId);
@@ -92,7 +90,6 @@ export class VentaEditComponent {
             observacion: data.observacion
           });
 
-          // Cargar detalles y mapear nombres de productos para la UI
           if (data.detalles) {
             const mappedDetalles = data.detalles.map(d => {
               const prod = this.productos().find(p => p.idProducto === d.idProducto);
@@ -102,6 +99,7 @@ export class VentaEditComponent {
               };
             });
             this.detalles.set(mappedDetalles);
+            this.detallesOriginales.set(mappedDetalles);
           }
         });
       }
@@ -115,9 +113,11 @@ export class VentaEditComponent {
     const prod = this.productos().find(p => p.idProducto === val.idProducto);
     if (!prod) return;
 
-    // Verificar stock disponible en creación
-    if (!this.$isEdit() && prod.stock < val.cantidad!) {
-      alert(`Stock insuficiente. Stock actual de ${prod.nombre}: ${prod.stock}`);
+    const cantidadOriginalEnEstaVenta = this.detallesOriginales().find(d => d.idProducto === val.idProducto)?.cantidad || 0;
+    const stockDisponible = prod.stock + cantidadOriginalEnEstaVenta;
+
+    if (stockDisponible < val.cantidad) {
+      alert(`Stock insuficiente. Stock disponible de ${prod.nombre}: ${stockDisponible}`);
       return;
     }
 
@@ -131,7 +131,6 @@ export class VentaEditComponent {
       subtotal: subtotal
     };
 
-    // Si ya existe el producto en el detalle, sumarle la cantidad
     const index = this.detalles().findIndex(d => d.idProducto === nuevoDetalle.idProducto);
     if (index > -1) {
       const current = this.detalles();
@@ -192,7 +191,7 @@ export class VentaEditComponent {
       tap(() => this.ventaService.setMessageChange(isEdit ? 'VENTA ACTUALIZADA' : 'VENTA REGISTRADA CON ÉXITO'))
     )
     .subscribe(() => {
-      this.router.navigate(['/ventas']);
+      this.router.navigate(['/pages/ventas']);
     });
   }
 }

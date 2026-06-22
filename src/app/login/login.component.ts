@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment.development';
 import { LoginService } from '../services/login.service';
+import { AuthService } from '../services/auth.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
@@ -26,6 +27,7 @@ import { map } from 'rxjs';
 })
 export class LoginComponent {
   private readonly loginService = inject(LoginService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   loginForm: FormGroup = new FormGroup({
@@ -41,17 +43,25 @@ export class LoginComponent {
   );
 
   isLoggingIn = signal(false);
+  loginError = signal(false);
 
   login() {
     if (this.loginForm.valid) {
       this.isLoggingIn.set(true);
-      this.loginService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(data => {
-        sessionStorage.setItem(environment.TOKEN_NAME, data.access_token);
-        this.router.navigate(['/pages/dashboard']);
+      this.loginError.set(false);
+      this.loginService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
+        next: (data) => {
+          sessionStorage.setItem(environment.TOKEN_NAME, data.access_token);
+          this.authService.cargarUsuarioActual().subscribe(usuario => {
+            this.authService.setUsuarioActual(usuario);
+            this.router.navigate(['/pages/dashboard']);
+          });
+        },
+        error: () => {
+          this.isLoggingIn.set(false);
+          this.loginError.set(true);
+        }
       });
-      setTimeout(() => {
-        this.isLoggingIn.set(false);
-      }, 2000);
     }
   }
 }

@@ -1,18 +1,21 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProveedorService } from '../../services/proveedor.service';
 import { Proveedor } from '../../model/proveedor';
+import { AuthService } from '../../services/auth.service';
+import { ɵEmptyOutletComponent } from "@angular/router";
 
 @Component({
     selector: 'app-proveedor',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, ɵEmptyOutletComponent],
     templateUrl: './proveedor.component.html',
     styleUrl: './proveedor.component.css'
 })
 export class ProveedorComponent {
     private service = inject(ProveedorService);
+    protected authService = inject(AuthService);
     
     // Vinculación directa al Signal de solo lectura del servicio (Cumple la refactorización del ing)
     proveedores = this.service.$listChange;
@@ -23,13 +26,21 @@ export class ProveedorComponent {
     private fb = inject(FormBuilder);
 
     constructor() {
+        this.cargarDatos();
         this.proveedorForm = this.fb.group({
             razonSocial: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
             ruc: ['', [Validators.pattern('\\d{11}')]],
             direccion: ['', [Validators.maxLength(150)]],
-            telefono: ['', [Validators.pattern('\\d{9}')]],
+            telefono: ['', [Validators.pattern('^(\\d{9}|\\d{2,3}-\\d{6,7})$')]],
             email: ['', [Validators.email, Validators.maxLength(100)]],
             estado: [true]
+        });
+    }
+
+    cargarDatos(): void {
+        this.service.findAll().subscribe({
+            next: (data) => this.service.setListChange(data),
+            error: (err) => console.error('Error al cargar proveedores:', err)
         });
     }
 
@@ -44,7 +55,7 @@ export class ProveedorComponent {
         if (this.isEditing && this.editingId) {
             this.service.update(this.editingId, proveedor).subscribe({
                 next: () => {
-                    this.service.cargarDatosIniciales(); // Sincroniza la señal global
+                    this.cargarDatos();
                     this.resetForm();
                 },
                 error: (err) => console.error('Error al actualizar proveedor:', err)
@@ -52,7 +63,7 @@ export class ProveedorComponent {
         } else {
             this.service.save(proveedor).subscribe({
                 next: () => {
-                    this.service.cargarDatosIniciales(); // Sincroniza la señal global
+                    this.cargarDatos();
                     this.resetForm();
                 },
                 error: (err) => console.error('Error al guardar proveedor:', err)
@@ -77,7 +88,7 @@ export class ProveedorComponent {
         if (confirm('¿Estás seguro de que deseas eliminar este proveedor?')) {
             this.service.delete(id).subscribe({
                 next: () => {
-                    this.service.cargarDatosIniciales(); // Sincroniza la señal global
+                    this.cargarDatos();
                 },
                 error: (err) => console.error('Error al eliminar proveedor:', err)
             });

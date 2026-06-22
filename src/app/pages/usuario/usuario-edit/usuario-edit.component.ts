@@ -89,7 +89,7 @@ export class UsuarioEditComponent {
       tap(() => this.usuarioService.setMessageChange(isEdit ? 'USUARIO ACTUALIZADO' : 'USUARIO CREADO'))
     )
     .subscribe(() => {
-      this.router.navigate(['/usuarios']);
+      this.router.navigate(['/pages/usuarios']);
     });
   }
 }

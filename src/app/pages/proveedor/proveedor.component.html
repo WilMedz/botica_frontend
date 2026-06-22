@@ -1,6 +1,6 @@
 <h2>Gestión de Proveedores</h2>
 
-<div class="form-container">
+<div class="form-container" *ngIf="authService.esAdministrador()">
     <h3>{{ isEditing ? 'Editar' : 'Nuevo' }} Proveedor</h3>
     <form [formGroup]="proveedorForm" (ngSubmit)="guardar()">
         <div class="form-group">
@@ -67,8 +67,10 @@
             <td>{{ p.email }}</td>
             <td>{{ p.estado ? 'Activo' : 'Inactivo' }}</td>
             <td class="acciones">
-                <button (click)="editar(p)">Editar</button>
-                <button (click)="eliminar(p.idProveedor!)">Eliminar</button>
+                <ng-container *ngIf="authService.esAdministrador()">
+                    <button (click)="editar(p)">Editar</button>
+                    <button (click)="eliminar(p.idProveedor!)">Eliminar</button>
+                </ng-container>
             </td>
         </tr>
     </tbody>

@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { switchMap, tap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-producto',
@@ -32,12 +33,12 @@ import { switchMap, tap } from 'rxjs';
 export class ProductoComponent {
   private readonly productoService = inject(ProductoService);
   private readonly snackBar = inject(MatSnackBar);
-
+  
+  protected readonly authService = inject(AuthService);
   protected $dataSource = signal(new MatTableDataSource<Producto>());
   protected $paginator = viewChild(MatPaginator);
   protected $sort = viewChild(MatSort);
   protected $productos = this.productoService.$listChange;
-
   protected displayedColumns: string[] = ['idProducto', 'nombre', 'descripcion', 'precioVenta', 'stock', 'estado', 'acciones'];
 
   constructor() {

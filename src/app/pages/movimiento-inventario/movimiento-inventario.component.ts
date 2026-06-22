@@ -9,7 +9,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MovimientoInventario } from '../../model/movimiento-inventario';
+import { AuthService } from '../../services/auth.service';
 import { MovimientoInventarioService } from '../../services/movimiento-inventario.service';
 import { ProductoService } from '../../services/producto.service';
 import { Producto } from '../../model/producto';
@@ -39,6 +39,7 @@ export class MovimientoInventarioComponent {
   private readonly productoService = inject(ProductoService);
   private readonly snackBar = inject(MatSnackBar);
 
+  protected readonly authService = inject(AuthService);
   protected productos = signal<Producto[]>([]);
   protected $dataSource = signal(new MatTableDataSource<any>());
   protected $paginator = viewChild(MatPaginator);

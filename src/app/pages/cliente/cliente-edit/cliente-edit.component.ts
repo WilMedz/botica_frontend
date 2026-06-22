@@ -74,7 +74,7 @@ export class ClienteEditComponent {
       tap(() => this.clienteService.setMessageChange(isEdit ? 'ACTUALIZADO' : 'CREADO'))
     )
     .subscribe(() => {
-      this.router.navigate(['/clientes']);
+      this.router.navigate(['/pages/clientes']);
     });
   }
 }

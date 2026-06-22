@@ -47,6 +47,10 @@
                 Mínimo 3 caracteres
             </div>
 
+            <div class="field-error" *ngIf="loginError()">
+                Usuario o contraseña incorrectos
+            </div>
+
             <button
                 class="login-btn"
                 type="submit"

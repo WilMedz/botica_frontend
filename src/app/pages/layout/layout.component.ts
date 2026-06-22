@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../model/usuario';
@@ -12,15 +12,24 @@ import { Usuario } from '../../model/usuario';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent {
 
   private menuService = inject(MenuService);
   private usuarioService = inject(UsuarioService);
+  private router = inject(Router);
 
   public menus = this.menuService.menusSignal;
   public usuarioActual = signal<Usuario | null>(null);
+  public urlActual = signal<string>(this.router.url);
 
-  ngOnInit(): void {
+  public tituloPaginaActual = computed(() => {
+    const menusList = this.menus();
+    const url = this.urlActual();
+    const menuEncontrado = menusList.find(m => url.startsWith(m.url));
+    return menuEncontrado ? menuEncontrado.nombre : 'Dashboard';
+  });
+
+  constructor() {
     this.menuService.getMenusByUser().subscribe({
       error: (err) => console.error('Error cargando menús dinámicos', err)
     });
@@ -28,6 +37,12 @@ export class LayoutComponent implements OnInit {
     this.usuarioService.getMe().subscribe({
       next: (data) => this.usuarioActual.set(data),
       error: (err) => console.error('Error cargando datos del usuario', err)
+    });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.urlActual.set(event.urlAfterRedirects);
+      }
     });
   }
 }

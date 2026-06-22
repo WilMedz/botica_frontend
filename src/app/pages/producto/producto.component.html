@@ -41,7 +41,8 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> ACCIONES </th>
       <td mat-cell *matCellDef="let row">
-        <button mat-flat-button [routerLink]="['edit', row.idProducto]">
+        @if (authService.esAdministrador()) {
+          <button mat-flat-button [routerLink]="['edit', row.idProducto]">
           <span>Editar</span>
           <mat-icon>edit</mat-icon>
         </button>
@@ -49,6 +50,7 @@
           <span>Eliminar</span>
           <mat-icon>delete</mat-icon>
         </button>
+        }
       </td>
     </ng-container>
 
@@ -62,7 +64,9 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Seleccionar página"></mat-paginator>
 
-  <button mat-fab style="float: right; margin: 16px;" routerLink="new">
-    <mat-icon>add</mat-icon>
-  </button>
+  @if (authService.esAdministrador()) {
+    <button mat-fab style="float: right; margin: 16px;" routerLink="new">
+      <mat-icon>add</mat-icon>
+    </button>
+  }
 </div>

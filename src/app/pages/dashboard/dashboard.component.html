@@ -75,8 +75,8 @@
         <p class="grafico-subtitulo">Cantidad de ventas por día</p>
       </div>
       <div class="grafico-filtros">
-        <button class="btn-filtro activo" disabled>7 días</button>
-        <button class="btn-filtro" disabled>30 días</button>
+        <button class="btn-filtro" [class.activo]="rangoVentas() === 7" (click)="actualizarGraficoVentas(7)">7 días</button>
+        <button class="btn-filtro" [class.activo]="rangoVentas() === 30" (click)="actualizarGraficoVentas(30)">30 días</button>
       </div>
     </div>
     <canvas #ventasChart></canvas>
@@ -89,8 +89,8 @@
         <p class="grafico-subtitulo">Monto ingresado por día (S/.)</p>
       </div>
       <div class="grafico-filtros">
-        <button class="btn-filtro activo" disabled>7 días</button>
-        <button class="btn-filtro" disabled>30 días</button>
+        <button class="btn-filtro" [class.activo]="rangoIngresos() === 7" (click)="actualizarGraficoIngresos(7)">7 días</button>
+        <button class="btn-filtro" [class.activo]="rangoIngresos() === 30" (click)="actualizarGraficoIngresos(30)">30 días</button>
       </div>
     </div>
     <canvas #ingresosChart></canvas>

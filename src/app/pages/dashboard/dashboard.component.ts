@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ElementRef, ViewChild, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CategoriaService } from '../../services/categoria.service';
 import { ClienteService } from '../../services/cliente.service';
@@ -34,19 +34,26 @@ export class DashboardComponent implements OnInit {
   ventasRecientes = signal<Venta[]>([]);
   fechaHoy: string = '';
 
-  ngOnInit(): void {      //trabajar con señales (signals de angular)
+  private todasLasVentas: Venta[] = []
+  rangoVentas = signal<number>(7);
+  rangoIngresos = signal<number>(7);
+  private chartVentas: Chart | null = null;
+  private chartIngresos: Chart | null = null;
+
+  ngOnInit(): void {
     this.categoriaService.findAll().subscribe(data => this.totalCategorias.set(data.length));
     this.proveedorService.findAll().subscribe(data => this.totalProveedores.set(data.length));
     this.productoService.findAll().subscribe(data => this.totalProductos.set(data.length));
     this.clienteService.findAll().subscribe(data => this.totalClientes.set(data.length));
     this.ventaService.findAll().subscribe(data => {
       this.totalVentas.set(data.length);
+      this.todasLasVentas = data;
 
       const ordenadas = [...data].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
       this.ventasRecientes.set(ordenadas.slice(0, 5));
 
-      const { labels, conteoVentas, sumaIngresos } = this.calcularDatosGrafico(data, 7);
-      this.crearGraficos(labels, conteoVentas, sumaIngresos);
+      this.actualizarGraficoVentas(this.rangoVentas());
+      this.actualizarGraficoIngresos(this.rangoIngresos());
     });
 
     const hoy = new Date();
@@ -55,14 +62,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  crearGraficos(labels: string[], ventas: number[], ingresos: number[]): void {
-    new Chart(this.ventasChart.nativeElement, {
+  actualizarGraficoVentas(dias: number): void {
+    this.rangoVentas.set(dias);
+    const { labels, conteoVentas } = this.calcularDatosGrafico(this.todasLasVentas, dias);
+
+    if (this.chartVentas) {
+      this.chartVentas.destroy();
+    }
+
+    this.chartVentas = new Chart(this.ventasChart.nativeElement, {
       type: 'bar',
       data: {
         labels: labels,
         datasets: [{
           label: 'Ventas',
-          data: ventas,
+          data: conteoVentas,
           backgroundColor: 'rgba(124, 58, 237, 0.2)',
           borderColor: 'rgba(124, 58, 237, 0.8)',
           borderWidth: 2,
@@ -78,14 +92,23 @@ export class DashboardComponent implements OnInit {
         }
       }
     });
+  }
 
-    new Chart(this.ingresosChart.nativeElement, {
+  actualizarGraficoIngresos(dias: number): void {
+    this.rangoIngresos.set(dias);
+    const { labels, sumaIngresos } = this.calcularDatosGrafico(this.todasLasVentas, dias);
+
+    if (this.chartIngresos) {
+      this.chartIngresos.destroy();
+    }
+
+    this.chartIngresos = new Chart(this.ingresosChart.nativeElement, {
       type: 'line',
       data: {
         labels: labels,
         datasets: [{
           label: 'Ingresos S/.',
-          data: ingresos,
+          data: sumaIngresos,
           backgroundColor: 'rgba(5, 150, 105, 0.1)',
           borderColor: 'rgba(5, 150, 105, 0.8)',
           borderWidth: 2,
@@ -99,7 +122,7 @@ export class DashboardComponent implements OnInit {
         plugins: { legend: { display: false } },
         scales: {
           y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-          x: { grid: { display: false } }
+          x: {grid: { display: false } }
         }
       }
     });

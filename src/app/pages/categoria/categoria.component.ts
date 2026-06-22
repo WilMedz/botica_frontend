@@ -11,7 +11,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {switchMap, tap} from 'rxjs';
 import { RouterLink, RouterOutlet } from '@angular/router';
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-categoria',
@@ -35,11 +35,11 @@ export class CategoriaComponent {
   private readonly categoriaService = inject(CategoriaService);
   private readonly snackBar = inject(MatSnackBar);
 
+  protected readonly authService = inject(AuthService);
   protected $dataSource = signal(new MatTableDataSource<Categoria>());
   protected $paginator = viewChild(MatPaginator);
   protected $sort = viewChild(MatSort);
   protected $categoria = this.categoriaService.$listChange;
-
   protected displayedColumns: string[] = ['idCategoria', 'nombre', 'descripcion', 'estado', 'acciones'];
 
   constructor() {

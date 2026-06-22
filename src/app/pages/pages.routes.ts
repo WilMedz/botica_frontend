@@ -13,6 +13,7 @@ import { MovimientoInventarioComponent } from './movimiento-inventario/movimient
 import { RolComponent }                  from './rol/rol.component';
 import { UsuarioComponent }              from './usuario/usuario.component';
 import { UsuarioEditComponent }          from './usuario/usuario-edit/usuario-edit.component';
+import { adminGuard } from '../guards/admin-guard';
 
 export const pagesRoutes: Routes = [
   { path: 'dashboard',   component: DashboardComponent },
@@ -34,8 +35,8 @@ export const pagesRoutes: Routes = [
     { path: 'edit/:id',  component: VentaEditComponent }
   ]},
   { path: 'movimientos', component: MovimientoInventarioComponent },
-  { path: 'roles',       component: RolComponent },
-  { path: 'usuarios',    component: UsuarioComponent, children: [
+  { path: 'roles',       component: RolComponent, canActivate: [adminGuard] },
+  { path: 'usuarios',    component: UsuarioComponent, canActivate: [adminGuard], children: [
     { path: 'new',       component: UsuarioEditComponent },
     { path: 'edit/:id',  component: UsuarioEditComponent }
   ]},

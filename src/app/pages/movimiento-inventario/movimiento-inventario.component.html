@@ -1,7 +1,7 @@
 <h2>Movimientos de Inventario</h2>
 
 <!-- FORMULARIO PARA REGISTRAR NUEVO MOVIMIENTO -->
-<div class="form-container">
+<div class="form-container" *ngIf="authService.esAdministrador()">
   <h3>Registrar Nuevo Movimiento de Stock</h3>
   <form [formGroup]="movementForm" (ngSubmit)="registrarMovimiento()" class="movement-form">
     
