@@ -4,12 +4,11 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ProveedorService } from '../../services/proveedor.service';
 import { Proveedor } from '../../model/proveedor';
 import { AuthService } from '../../services/auth.service';
-import { ɵEmptyOutletComponent } from "@angular/router";
 
 @Component({
     selector: 'app-proveedor',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, ɵEmptyOutletComponent],
+    imports: [CommonModule, ReactiveFormsModule,],
     templateUrl: './proveedor.component.html',
     styleUrl: './proveedor.component.css'
 })
