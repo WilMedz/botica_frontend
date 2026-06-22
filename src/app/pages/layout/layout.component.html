@@ -26,14 +26,6 @@
         </ul>
       </nav>
     </div>
-
-    <!-- Botón de Cerrar Sesión en la parte inferior -->
-    <div class="sidebar-footer">
-      <a href="/login" class="logout-link">
-        <i class="material-icons">logout</i>
-        <span>Cerrar Sesión</span>
-      </a>
-    </div>
   </aside>
 
   <!-- CONTENEDOR DE CONTENIDO PRINCIPAL -->
@@ -55,11 +47,22 @@
 
       <div class="navbar-actions">
         <i class="material-icons">notifications_none</i>
-        <i class="material-icons">settings</i>
-        <div class="user-chip">
-          <img src="images/isotipo-marleny.png" alt="Logo" class="user-avatar">
+        <span class="separator"> | </span>
+        <div class="user-chip" (click)="toggleUserMenu()">
           <span>{{ usuarioActual()?.nombre }} {{ usuarioActual()?.apellido }}</span>
+          <img src="images/isotipo-marleny.png" alt="Logo" class="user-avatar">
           <i class="material-icons dropdown-icon">expand_more</i>
+
+          @if (showUserMenu()) {
+            <div class="user-dropdown">
+              <a routerLink="/pages/perfil">
+                <i class="material-icons">person</i> Ver mi perfil
+              </a>
+              <a (click)="cerrarSesion()">
+                <i class="material-icons">logout</i> Cerrar sesión
+              </a>
+            </div>
+          }
         </div>
       </div>
     </header>

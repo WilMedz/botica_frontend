@@ -1,8 +1,9 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { MenuService } from '../../services/menu.service';
 import { UsuarioService } from '../../services/usuario.service';
+import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../model/usuario';
 
 @Component({
@@ -16,11 +17,13 @@ export class LayoutComponent {
 
   private menuService = inject(MenuService);
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   public menus = this.menuService.menusSignal;
   public usuarioActual = signal<Usuario | null>(null);
   public urlActual = signal<string>(this.router.url);
+  public showUserMenu = signal<boolean>(false);
 
   public tituloPaginaActual = computed(() => {
     const menusList = this.menus();
@@ -28,6 +31,14 @@ export class LayoutComponent {
     const menuEncontrado = menusList.find(m => url.startsWith(m.url));
     return menuEncontrado ? menuEncontrado.nombre : 'Dashboard';
   });
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.user-chip')) {
+      this.showUserMenu.set(false);
+    }
+  }
 
   constructor() {
     this.menuService.getMenusByUser().subscribe({
@@ -44,5 +55,14 @@ export class LayoutComponent {
         this.urlActual.set(event.urlAfterRedirects);
       }
     });
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu.set(!this.showUserMenu());
+  }
+
+  cerrarSesion() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
