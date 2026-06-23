@@ -14,6 +14,7 @@ import { RolComponent }                  from './rol/rol.component';
 import { UsuarioComponent }              from './usuario/usuario.component';
 import { UsuarioEditComponent }          from './usuario/usuario-edit/usuario-edit.component';
 import { adminGuard } from '../guards/admin-guard';
+import { PerfilComponent } from './perfil/perfil.component';
 
 export const pagesRoutes: Routes = [
   { path: 'dashboard',   component: DashboardComponent },
@@ -40,5 +41,6 @@ export const pagesRoutes: Routes = [
     { path: 'new',       component: UsuarioEditComponent },
     { path: 'edit/:id',  component: UsuarioEditComponent }
   ]},
-  { path: '',            redirectTo: 'dashboard', pathMatch: 'full' }
+  { path: '',            redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'perfil',      component: PerfilComponent}
 ];

@@ -1,0 +1,58 @@
+<div class="modal-overlay" (click)="cerrar()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="avatar-circle">
+        <i class="material-icons">person</i>
+      </div>
+      <button class="btn-editar" (click)="modoEdicion.set(!modoEdicion())">
+        <i class="material-icons">edit</i>
+      </button>
+    </div>
+
+    @if (mensajeExito()) {
+      <div class="mensaje-exito">{{ mensajeExito() }}</div>
+    }
+
+    @if (!modoEdicion()) {
+      <div class="datos-view">
+        <h3>{{ usuario()?.nombre }} {{ usuario()?.apellido }}</h3>
+        <p class="username">{{ '@' + usuario()?.username }}</p>
+
+        <div class="datos-extra">
+          <div class="dato-fila">
+            <span class="dato-label">Email</span>
+            <span class="dato-valor">{{ usuario()?.email }}</span>
+          </div>
+          
+          <div class="dato-fila">
+            <span class="dato-label">Estado</span>
+            <span class="dato-valor">{{ usuario()?.estado ? 'Activo' : 'Inactivo' }}</span>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" formControlName="nombre">
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" formControlName="apellido">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email">
+        </div>
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" formControlName="password" placeholder="Dejar en blanco para no cambiar">
+        </div>
+        <button type="submit" [disabled]="perfilForm.invalid">Guardar cambios</button>
+      </form>
+    }
+
+    <button class="btn-cerrar" routerLink="/pages/dashboard">Cerrar</button>
+  </div>
+</div>

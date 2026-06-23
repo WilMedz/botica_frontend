@@ -228,7 +228,7 @@ canvas {
   border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 /* ===== TABLA ===== */

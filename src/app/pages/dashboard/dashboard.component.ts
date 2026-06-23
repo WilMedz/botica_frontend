@@ -7,12 +7,13 @@ import { Chart, registerables } from 'chart.js';
 import { VentaService } from '../../services/venta.service';
 import { ProductoService } from '../../services/producto.service';
 import { Venta } from '../../model/venta';
+import { RouterLink } from "@angular/router";
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
