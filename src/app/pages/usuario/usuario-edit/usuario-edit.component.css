@@ -1,65 +1,45 @@
-.edit-container {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  margin-top: 20px;
-  max-width: 650px;
-  margin-left: auto;
-  margin-right: auto;
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px 0 24px;
 }
 
-h3 {
+.modal-header h2 {
   font-size: 18px;
-  color: #1e1e2f;
-  margin-bottom: 25px;
   font-weight: 600;
-  border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 12px;
+  color: #1e1e2f;
+  margin: 0;
 }
 
-.form-layout {
+.form-container {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.full-width {
+mat-form-field {
   width: 100%;
 }
 
-.status-row {
-  margin: 10px 0 20px 0;
+mat-dialog-actions {
+  padding: 8px 24px 16px 24px;
+  gap: 8px;
 }
 
-.actions {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
+mat-dialog-actions button:first-child {
+  background-color: #f3f4f6;
+  color: #374151;
 }
 
-.actions button[type="submit"] {
+mat-dialog-actions button:last-child {
   background-color: #7c3aed;
   color: white;
-}
-
-.actions button[type="submit"]:hover {
-  background-color: #6d28d9;
-}
-
-.actions button[type="button"] {
-  color: #64748b;
-}
-
-@media(max-width: 600px) {
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
 }

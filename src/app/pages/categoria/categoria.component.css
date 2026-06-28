@@ -31,3 +31,20 @@ mat-form-field {
 ::ng-deep .mdc-text-field--filled .mdc-text-field__ripple {
   border-radius: 10px !important;
 }
+
+.acciones {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+::ng-deep .acciones .mdc-button:first-child {
+  background-color: #ede9fe !important;
+  color: #6d28d9 !important;
+}
+
+::ng-deep .acciones .mdc-button:last-child {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}

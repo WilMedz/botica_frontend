@@ -41,6 +41,8 @@ tr.mat-row:hover {
 
 .acciones {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 8px;
 }
 
@@ -69,6 +71,16 @@ tr.mat-row:hover {
   background-color: #fecaca;
 }
 
+::ng-deep .acciones .mdc-button:first-child {
+  background-color: #ede9fe !important;
+  color: #6d28d9 !important;
+}
+
+::ng-deep .acciones .mdc-button:last-child {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
 mat-paginator {
   background-color: #f8fafc;
   border-top: 1px solid #e2e8f0;
@@ -79,13 +91,10 @@ button[mat-fab] {
   color: white;
 }
 
-.badge-rol {
-  background-color: #eff6ff;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
+.card-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
 }

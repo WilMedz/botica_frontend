@@ -1,37 +1,44 @@
-<form [formGroup]="$form()" (submit)="operate()" class="form-container">
+<div class="modal-header">
+  <h2 mat-dialog-title>{{ $isEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+  <button mat-icon-button (click)="cancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 
-  <div [hidden]="true">
-    <mat-form-field>
-      <mat-label>ID</mat-label>
-      <input matInput formControlName="idCategoria">
+<mat-dialog-content>
+  <form [formGroup]="$form()" id="categoriaForm" class="form-container">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="Nombre de la categoría" formControlName="nombre">
+      @if ($form().get('nombre')?.hasError('required')) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+      @if ($form().get('nombre')?.hasError('maxlength')) {
+        <mat-error>Máximo 20 caracteres</mat-error>
+      }
     </mat-form-field>
-  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Nombre</mat-label>
-    <input matInput placeholder="Nombre de la categoría" formControlName="nombre">
-    <mat-error *ngIf="$form().get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
-    <mat-error *ngIf="$form().get('nombre')?.hasError('minlength')">Mínimo 3 caracteres</mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <input matInput placeholder="Descripción" formControlName="descripcion">
+      @if ($form().get('descripcion')?.hasError('required')) {
+        <mat-error>La descripción es obligatoria</mat-error>
+      }
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Descripción</mat-label>
-    <input matInput placeholder="Descripción" formControlName="descripcion">
-    <mat-error *ngIf="$form().get('descripcion')?.hasError('required')">La descripción es obligatoria</mat-error>
-  </mat-form-field>
+    <mat-checkbox formControlName="estado">Activo</mat-checkbox>
 
-  <mat-checkbox formControlName="estado">Activo</mat-checkbox>
+  </form>
+</mat-dialog-content>
 
-  <div class="form-actions">
-    <button mat-flat-button type="submit" [disabled]="$form().invalid">
-      <span>{{ $isEdit() ? 'Actualizar' : 'Guardar' }}</span>
-      <mat-icon>done</mat-icon>
-    </button>
-
-    <button mat-flat-button type="button" routerLink="/categorias">
-      <span>Cancelar</span>
-      <mat-icon>cancel</mat-icon>
-    </button>
-  </div>
-
-</form>
+<mat-dialog-actions align="end">
+  <button mat-flat-button type="button" (click)="cancel()">
+    <mat-icon>cancel</mat-icon>
+    <span>Cancelar</span>
+  </button>
+  <button mat-flat-button type="button" (click)="operate()" [disabled]="$form().invalid">
+    <mat-icon>done</mat-icon>
+    <span>{{ $isEdit() ? 'Actualizar' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

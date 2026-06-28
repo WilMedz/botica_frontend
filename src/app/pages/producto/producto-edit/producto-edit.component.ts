@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,11 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CategoriaService } from '../../../services/categoria.service';
 import { ProveedorService } from '../../../services/proveedor.service';
 import { ProductoService } from '../../../services/producto.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Producto } from '../../../model/producto';
 import { Categoria } from '../../../model/categoria';
 import { Proveedor } from '../../../model/proveedor';
@@ -28,18 +27,19 @@ import { switchMap, tap } from 'rxjs';
     MatIconModule,
     MatCheckboxModule,
     MatSelectModule,
-    RouterLink
+    MatDialogModule
   ],
   templateUrl: './producto-edit.component.html',
   styleUrl: './producto-edit.component.css'
 })
 export class ProductoEditComponent {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly productoService = inject(ProductoService);
   private readonly categoriaService = inject(CategoriaService);
   private readonly proveedorService = inject(ProveedorService);
+  private readonly dialogRef = inject(MatDialogRef<ProductoEditComponent>);
+  protected readonly data = inject(MAT_DIALOG_DATA) as { id?: number };
 
+  protected $isEdit = signal(!!this.data?.id);
   protected categorias = signal<Categoria[]>([]);
   protected proveedores = signal<Proveedor[]>([]);
 
@@ -58,20 +58,15 @@ export class ProductoEditComponent {
     estado:           new FormControl<boolean>(true),
   }));
 
-  private readonly $params = toSignal(this.route.params, { initialValue: {} });
-  protected $id = computed(() => this.$params()['id']);
-  protected $isEdit = computed(() => !!this.$id());
-
   constructor() {
     this.categoriaService.findAll().subscribe(data => this.categorias.set(data));
     this.proveedorService.findAll().subscribe(data => this.proveedores.set(data));
 
-    effect(() => {
-      const id = this.$id();
-      if (id) {
-        this.productoService.findById(id).subscribe(data => this.$form().patchValue(data));
-      }
-    });
+    if (this.data?.id) {
+      this.productoService.findById(this.data.id).subscribe(data => {
+        this.$form().patchValue(data);
+      });
+    }
   }
 
   operate() {
@@ -79,7 +74,7 @@ export class ProductoEditComponent {
     if (form.invalid) return;
 
     const isEdit = this.$isEdit();
-    const id = this.$id();
+    const id = this.data?.id;
     const producto: Producto = form.value as Producto;
 
     const operation$ = isEdit
@@ -90,9 +85,12 @@ export class ProductoEditComponent {
       switchMap(() => this.productoService.findAll()),
       tap(data => this.productoService.setListChange(data)),
       tap(() => this.productoService.setMessageChange(isEdit ? 'ACTUALIZADO' : 'CREADO'))
-    )
-    .subscribe(() => {
-      this.router.navigate(['/productos']);
+    ).subscribe(() => {
+      this.dialogRef.close();
     });
+  }
+
+  cancel() {
+    this.dialogRef.close();
   }
 }

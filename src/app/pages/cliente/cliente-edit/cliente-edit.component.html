@@ -1,54 +1,61 @@
-<div class="edit-container">
-  <h3>{{ $isEdit() ? 'Editar' : 'Nuevo' }} Cliente</h3>
+<div class="modal-header">
+  <h2 mat-dialog-title>{{ $isEdit() ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+  <button mat-icon-button (click)="cancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 
-  <form [formGroup]="$form()" (ngSubmit)="operate()" class="form-layout">
-    
-    <div class="form-row">
+<mat-dialog-content>
+  <form [formGroup]="$form()" id="clienteForm" class="form-container">
+
+    <div class="form-grid">
       <mat-form-field appearance="outline">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="nombre" placeholder="Nombre" required>
-        <mat-error *ngIf="$form().get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+        <input matInput formControlName="nombre" placeholder="Nombre">
+        @if ($form().get('nombre')?.hasError('required')) {
+          <mat-error>El nombre es obligatorio</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Apellido</mat-label>
-        <input matInput formControlName="apellido" placeholder="Apellido" required>
-        <mat-error *ngIf="$form().get('apellido')?.hasError('required')">El apellido es obligatorio</mat-error>
+        <input matInput formControlName="apellido" placeholder="Apellido">
+        @if ($form().get('apellido')?.hasError('required')) {
+          <mat-error>El apellido es obligatorio</mat-error>
+        }
       </mat-form-field>
-    </div>
 
-    <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Documento / DNI / RUC</mat-label>
-        <input matInput formControlName="documento" placeholder="Nro Documento">
+        <mat-label>Documento</mat-label>
+        <input matInput formControlName="documento" placeholder="DNI / RUC">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Teléfono</mat-label>
         <input matInput formControlName="telefono" placeholder="Ej. 987654321">
       </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="correo@ejemplo.com">
+        @if ($form().get('email')?.hasError('email')) {
+          <mat-error>Formato de correo inválido</mat-error>
+        }
+      </mat-form-field>
     </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" type="email" placeholder="correo@ejemplo.com">
-      <mat-error *ngIf="$form().get('email')?.hasError('email')">Formato de correo inválido</mat-error>
-    </mat-form-field>
-
-    <div class="status-row">
-      <mat-checkbox formControlName="estado">Activo</mat-checkbox>
-    </div>
-
-    <div class="actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="$form().invalid">
-        <mat-icon>save</mat-icon>
-        <span>Aceptar</span>
-      </button>
-      <button mat-button type="button" routerLink="/pages/clientes">
-        <mat-icon>cancel</mat-icon>
-        <span>Cancelar</span>
-      </button>
-    </div>
+    <mat-checkbox formControlName="estado">Activo</mat-checkbox>
 
   </form>
-</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button type="button" (click)="cancel()">
+    <mat-icon>cancel</mat-icon>
+    <span>Cancelar</span>
+  </button>
+  <button mat-flat-button type="button" (click)="operate()" [disabled]="$form().invalid">
+    <mat-icon>done</mat-icon>
+    <span>{{ $isEdit() ? 'Actualizar' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

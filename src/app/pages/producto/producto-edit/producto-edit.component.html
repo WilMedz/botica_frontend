@@ -1,89 +1,102 @@
-<form [formGroup]="$form()" (submit)="operate()" class="form-container">
+<div class="modal-header">
+  <h2 mat-dialog-title>{{ $isEdit() ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+  <button mat-icon-button (click)="cancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 
-  <div [hidden]="true">
-    <mat-form-field>
-      <mat-label>ID</mat-label>
-      <input matInput formControlName="idProducto">
-    </mat-form-field>
-  </div>
+<mat-dialog-content>
+  <form [formGroup]="$form()" id="productoForm" class="form-container">
 
-  <mat-form-field appearance="outline">
-    <mat-label>Nombre</mat-label>
-    <input matInput placeholder="Nombre del producto" formControlName="nombre">
-    <mat-error *ngIf="$form().get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
-    <mat-error *ngIf="$form().get('nombre')?.hasError('minlength')">Mínimo 2 caracteres</mat-error>
-  </mat-form-field>
+    <div class="form-grid">
 
-  <mat-form-field appearance="outline">
-    <mat-label>Descripción</mat-label>
-    <input matInput placeholder="Descripción" formControlName="descripcion">
-    <mat-error *ngIf="$form().get('descripcion')?.hasError('required')">La descripción es obligatoria</mat-error>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre del producto" formControlName="nombre">
+        @if ($form().get('nombre')?.hasError('required')) {
+          <mat-error>El nombre es obligatorio</mat-error>
+        }
+        @if ($form().get('nombre')?.hasError('minlength')) {
+          <mat-error>Mínimo 2 caracteres</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Código de Barra</mat-label>
-    <input matInput placeholder="Código de barra" formControlName="codigoBarra">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Código de Barra</mat-label>
+        <input matInput placeholder="Código de barra" formControlName="codigoBarra">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Precio Compra</mat-label>
-    <input matInput type="number" formControlName="precioCompra">
-    <mat-error *ngIf="$form().get('precioCompra')?.hasError('min')">Debe ser mayor a 0</mat-error>
-  </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <input matInput placeholder="Descripción" formControlName="descripcion">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Precio Venta</mat-label>
-    <input matInput type="number" formControlName="precioVenta">
-    <mat-error *ngIf="$form().get('precioVenta')?.hasError('min')">Debe ser mayor a 0</mat-error>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Precio Compra</mat-label>
+        <input matInput type="number" formControlName="precioCompra">
+        @if ($form().get('precioCompra')?.hasError('min')) {
+          <mat-error>Debe ser mayor a 0</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Stock</mat-label>
-    <input matInput type="number" formControlName="stock">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Precio Venta</mat-label>
+        <input matInput type="number" formControlName="precioVenta">
+        @if ($form().get('precioVenta')?.hasError('min')) {
+          <mat-error>Debe ser mayor a 0</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Stock Mínimo</mat-label>
-    <input matInput type="number" formControlName="stockMinimo">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" formControlName="stock">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Fecha de Vencimiento</mat-label>
-    <input matInput type="date" formControlName="fechaVencimiento">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Stock Mínimo</mat-label>
+        <input matInput type="number" formControlName="stockMinimo">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Categoría</mat-label>
-    <mat-select formControlName="idCategoria">
-      <mat-option *ngFor="let c of categorias()" [value]="c.idCategoria">
-        {{c.nombre}}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="$form().get('idCategoria')?.hasError('min')">Seleccione una categoría</mat-error>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Vencimiento</mat-label>
+        <input matInput type="date" formControlName="fechaVencimiento">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Proveedor</mat-label>
-    <mat-select formControlName="idProveedor">
-      <mat-option *ngFor="let p of proveedores()" [value]="p.idProveedor">
-        {{p.razonSocial}}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="$form().get('idProveedor')?.hasError('min')">Seleccione un proveedor</mat-error>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="idCategoria">
+          @for (c of categorias(); track c.idCategoria) {
+            <mat-option [value]="c.idCategoria">{{c.nombre}}</mat-option>
+          }
+        </mat-select>
+        @if ($form().get('idCategoria')?.hasError('required')) {
+          <mat-error>Seleccione una categoría</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-checkbox formControlName="estado">Activo</mat-checkbox>
+      <mat-form-field appearance="outline">
+        <mat-label>Proveedor</mat-label>
+        <mat-select formControlName="idProveedor">
+          @for (p of proveedores(); track p.idProveedor) {
+            <mat-option [value]="p.idProveedor">{{p.razonSocial}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-  <div class="form-actions">
-    <button mat-flat-button type="submit" [disabled]="$form().invalid">
-      <span>{{ $isEdit() ? 'Actualizar' : 'Guardar' }}</span>
-      <mat-icon>done</mat-icon>
-    </button>
+    </div>
 
-    <button mat-flat-button type="button" routerLink="/productos">
-      <span>Cancelar</span>
-      <mat-icon>cancel</mat-icon>
-    </button>
-  </div>
+    <mat-checkbox formControlName="estado">Activo</mat-checkbox>
 
-</form>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button type="button" (click)="cancel()">
+    <mat-icon>cancel</mat-icon>
+    <span>Cancelar</span>
+  </button>
+  <button mat-flat-button type="button" (click)="operate()" [disabled]="$form().invalid">
+    <mat-icon>done</mat-icon>
+    <span>{{ $isEdit() ? 'Actualizar' : 'Guardar' }}</span>
+  </button>
+</mat-dialog-actions>

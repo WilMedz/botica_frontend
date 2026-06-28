@@ -11,16 +11,16 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { switchMap, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { UsuarioEditComponent } from './usuario-edit/usuario-edit.component';
 
 @Component({
   selector: 'app-usuario',
   imports: [
     CommonModule,
-    RouterOutlet,
-    RouterLink,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
@@ -28,7 +28,8 @@ import { CommonModule } from '@angular/common';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css'
@@ -37,6 +38,8 @@ export class UsuarioComponent {
   private readonly usuarioService = inject(UsuarioService);
   private readonly rolService = inject(RolService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+  protected readonly authService = inject(AuthService);
 
   protected $dataSource = signal(new MatTableDataSource<any>());
   protected $paginator = viewChild(MatPaginator);
@@ -45,13 +48,7 @@ export class UsuarioComponent {
   protected roles = signal<Rol[]>([]);
 
   protected displayedColumns: string[] = [
-    'idUsuario',
-    'fullName',
-    'username',
-    'email',
-    'nombreRol',
-    'estado',
-    'acciones'
+    'idUsuario', 'fullName', 'username', 'email', 'nombreRol', 'estado', 'acciones'
   ];
 
   constructor() {
@@ -65,7 +62,6 @@ export class UsuarioComponent {
       const s = this.$sort();
       const ds = this.$dataSource();
 
-      // Mapear nombre del rol para mostrar en la UI
       const mapped = data.map(u => {
         const rol = rolesList.find(r => r.idRol === u.idRol);
         return {
@@ -89,6 +85,13 @@ export class UsuarioComponent {
     });
   }
 
+  openModal(id?: number) {
+    this.dialog.open(UsuarioEditComponent, {
+      width: '600px',
+      data: { id }
+    });
+  }
+
   applyFilter(e: any) {
     this.$dataSource().filter = e.target.value.trim().toLowerCase();
   }
@@ -96,13 +99,11 @@ export class UsuarioComponent {
   delete(id: number) {
     const ok = window.confirm('¿Eliminar usuario?');
     if (ok) {
-      this.usuarioService.delete(id)
-        .pipe(
-          switchMap(() => this.usuarioService.findAll()),
-          tap(data => this.usuarioService.setListChange(data)),
-          tap(() => this.usuarioService.setMessageChange('USUARIO ELIMINADO'))
-        )
-        .subscribe();
+      this.usuarioService.delete(id).pipe(
+        switchMap(() => this.usuarioService.findAll()),
+        tap(data => this.usuarioService.setListChange(data)),
+        tap(() => this.usuarioService.setMessageChange('USUARIO ELIMINADO'))
+      ).subscribe();
     }
   }
 }

@@ -9,15 +9,15 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterOutlet } from '@angular/router';
 import { switchMap, tap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { ProductoEditComponent } from './producto-edit/producto-edit.component';
 
 @Component({
   selector: 'app-producto',
   imports: [
-    RouterOutlet,
-    RouterLink,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
@@ -25,7 +25,8 @@ import { AuthService } from '../../services/auth.service';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './producto.component.html',
   styleUrl: './producto.component.css'
@@ -33,7 +34,8 @@ import { AuthService } from '../../services/auth.service';
 export class ProductoComponent {
   private readonly productoService = inject(ProductoService);
   private readonly snackBar = inject(MatSnackBar);
-  
+  private readonly dialog = inject(MatDialog);
+
   protected readonly authService = inject(AuthService);
   protected $dataSource = signal(new MatTableDataSource<Producto>());
   protected $paginator = viewChild(MatPaginator);
@@ -49,7 +51,6 @@ export class ProductoComponent {
       const p = this.$paginator();
       const s = this.$sort();
       const ds = this.$dataSource();
-
       ds.data = data;
       ds.paginator = p;
       ds.sort = s;
@@ -63,6 +64,14 @@ export class ProductoComponent {
       }
     });
   }
+
+ openModal(id?: number) {
+  console.log('openModal llamado', id);
+  this.dialog.open(ProductoEditComponent, {
+    width: '700px',
+    data: { id }
+  });
+}
 
   applyFilter(e: any) {
     this.$dataSource().filter = e.target.value.trim().toLowerCase();

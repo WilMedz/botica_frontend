@@ -4,12 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CategoriaService } from '../../../services/categoria.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Categoria } from '../../../model/categoria';
 import { switchMap, tap } from 'rxjs';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-categoria-edit',
@@ -20,42 +19,37 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    MatDialogModule
   ],
   templateUrl: './categoria-edit.component.html',
   styleUrl: './categoria-edit.component.css'
 })
 export class CategoriaEditComponent {
-
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly categoriaService = inject(CategoriaService);
+  private readonly dialogRef = inject(MatDialogRef<CategoriaEditComponent>);
+  protected readonly data = inject(MAT_DIALOG_DATA) as { id?: number };
+
+  protected $isEdit = signal(!!this.data?.id);
 
   protected $form = signal(new FormGroup({
-    idCategoria:  new FormControl<number | null>(null),
-    nombre:       new FormControl<string>('', [Validators.required, Validators.maxLength(20)]),
-    descripcion:  new FormControl<string>('', [Validators.required]),
-    estado:       new FormControl<boolean>(true),
+    idCategoria: new FormControl<number | null>(null),
+    nombre:      new FormControl<string>('', [Validators.required, Validators.maxLength(20)]),
+    descripcion: new FormControl<string>('', [Validators.required]),
+    estado:      new FormControl<boolean>(true),
   }));
 
-  private readonly $params = toSignal(this.route.params, { initialValue: {} });
-  protected $id = computed(() => this.$params()['id']);
-  protected $isEdit = computed(() => !!this.$id());
-
   constructor() {
-    effect(() => {
-      const id = this.$id();
-      if (id) {
-        this.categoriaService.findById(id).subscribe(data => this.$form().patchValue(data));
-      }
-    });
+    if (this.data?.id) {
+      this.categoriaService.findById(this.data.id).subscribe(data => {
+        this.$form().patchValue(data);
+      });
+    }
   }
 
   operate() {
     const form = this.$form();
     const isEdit = this.$isEdit();
-    const id = this.$id();
-
+    const id = this.data?.id;
     const categoria: Categoria = form.value as Categoria;
 
     const operation$ = isEdit
@@ -66,9 +60,12 @@ export class CategoriaEditComponent {
       switchMap(() => this.categoriaService.findAll()),
       tap(data => this.categoriaService.setListChange(data)),
       tap(() => this.categoriaService.setMessageChange(isEdit ? 'ACTUALIZADO' : 'CREADO'))
-    )
-    .subscribe(() => {
-      this.router.navigate(['/categorias']);
+    ).subscribe(() => {
+      this.dialogRef.close();
     });
+  }
+
+  cancel() {
+    this.dialogRef.close();
   }
 }

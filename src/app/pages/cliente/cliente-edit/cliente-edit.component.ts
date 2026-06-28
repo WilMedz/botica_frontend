@@ -1,12 +1,11 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ClienteService } from '../../../services/cliente.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Cliente } from '../../../model/cliente';
 import { switchMap, tap } from 'rxjs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -22,15 +21,17 @@ import { CommonModule } from '@angular/common';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    MatDialogModule
   ],
   templateUrl: './cliente-edit.component.html',
   styleUrl: './cliente-edit.component.css'
 })
 export class ClienteEditComponent {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly clienteService = inject(ClienteService);
+  private readonly dialogRef = inject(MatDialogRef<ClienteEditComponent>);
+  protected readonly data = inject(MAT_DIALOG_DATA) as { id?: number };
+
+  protected $isEdit = signal(!!this.data?.id);
 
   protected $form = signal(new FormGroup({
     idCliente: new FormControl<number | null>(null),
@@ -42,26 +43,19 @@ export class ClienteEditComponent {
     estado:    new FormControl<boolean>(true),
   }));
 
-  private readonly $params = toSignal(this.route.params, { initialValue: {} });
-  protected $id = computed(() => this.$params()['id']);
-  protected $isEdit = computed(() => !!this.$id());
-
   constructor() {
-    effect(() => {
-      const id = this.$id();
-      if (id) {
-        this.clienteService.findById(id).subscribe(data => this.$form().patchValue(data));
-      }
-    });
+    if (this.data?.id) {
+      this.clienteService.findById(this.data.id).subscribe(data => {
+        this.$form().patchValue(data);
+      });
+    }
   }
 
   operate() {
     const form = this.$form();
     if (form.invalid) return;
-
     const isEdit = this.$isEdit();
-    const id = this.$id();
-
+    const id = this.data?.id;
     const cliente: Cliente = form.value as Cliente;
 
     const operation$ = isEdit
@@ -72,9 +66,12 @@ export class ClienteEditComponent {
       switchMap(() => this.clienteService.findAll()),
       tap(data => this.clienteService.setListChange(data)),
       tap(() => this.clienteService.setMessageChange(isEdit ? 'ACTUALIZADO' : 'CREADO'))
-    )
-    .subscribe(() => {
-      this.router.navigate(['/pages/clientes']);
+    ).subscribe(() => {
+      this.dialogRef.close();
     });
+  }
+
+  cancel() {
+    this.dialogRef.close();
   }
 }

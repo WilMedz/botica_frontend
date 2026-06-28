@@ -78,3 +78,20 @@ button[mat-fab] {
   background-color: #7c3aed;
   color: white;
 }
+
+::ng-deep .acciones .mdc-button {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+::ng-deep .acciones .mdc-button:first-child {
+  background-color: #ede9fe !important;
+  color: #6d28d9 !important;
+}
+
+::ng-deep .acciones .mdc-button:last-child {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}

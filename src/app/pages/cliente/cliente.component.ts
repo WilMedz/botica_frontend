@@ -9,14 +9,14 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { switchMap, tap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { ClienteEditComponent } from './cliente-edit/cliente-edit.component';
 
 @Component({
   selector: 'app-cliente',
   imports: [
-    RouterOutlet,
-    RouterLink,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
@@ -24,7 +24,8 @@ import { switchMap, tap } from 'rxjs';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './cliente.component.html',
   styleUrl: './cliente.component.css'
@@ -32,6 +33,8 @@ import { switchMap, tap } from 'rxjs';
 export class ClienteComponent {
   private readonly clienteService = inject(ClienteService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+  protected readonly authService = inject(AuthService);
 
   protected $dataSource = signal(new MatTableDataSource<Cliente>());
   protected $paginator = viewChild(MatPaginator);
@@ -39,14 +42,7 @@ export class ClienteComponent {
   protected $clientes = this.clienteService.$listChange;
 
   protected displayedColumns: string[] = [
-    'idCliente',
-    'nombre',
-    'apellido',
-    'documento',
-    'telefono',
-    'email',
-    'estado',
-    'acciones'
+    'idCliente', 'nombre', 'apellido', 'documento', 'telefono', 'email', 'estado', 'acciones'
   ];
 
   constructor() {
@@ -57,7 +53,6 @@ export class ClienteComponent {
       const p = this.$paginator();
       const s = this.$sort();
       const ds = this.$dataSource();
-
       ds.data = data;
       ds.paginator = p;
       ds.sort = s;
@@ -72,6 +67,13 @@ export class ClienteComponent {
     });
   }
 
+  openModal(id?: number) {
+    this.dialog.open(ClienteEditComponent, {
+      width: '600px',
+      data: { id }
+    });
+  }
+
   applyFilter(e: any) {
     this.$dataSource().filter = e.target.value.trim().toLowerCase();
   }
@@ -79,13 +81,11 @@ export class ClienteComponent {
   delete(id: number) {
     const ok = window.confirm('¿Eliminar cliente?');
     if (ok) {
-      this.clienteService.delete(id)
-        .pipe(
-          switchMap(() => this.clienteService.findAll()),
-          tap(data => this.clienteService.setListChange(data)),
-          tap(() => this.clienteService.setMessageChange('ELIMINADO'))
-        )
-        .subscribe();
+      this.clienteService.delete(id).pipe(
+        switchMap(() => this.clienteService.findAll()),
+        tap(data => this.clienteService.setListChange(data)),
+        tap(() => this.clienteService.setMessageChange('ELIMINADO'))
+      ).subscribe();
     }
   }
 }
